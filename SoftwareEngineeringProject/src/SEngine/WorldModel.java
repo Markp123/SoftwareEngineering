@@ -6,7 +6,7 @@ public class WorldModel {
 	private Cell[][] world;
 	private Random random;
 	private int rows;
-    private int columns;
+	private int columns;
 
 	public WorldModel(int row, int column)
 	{
@@ -22,16 +22,16 @@ public class WorldModel {
 				world[i][j] = cell;
 			}
 		}
-		outsideRocks();
+		food();
 	}
 
 	public static void main(String[] args)
 	{
-		WorldModel wm = new WorldModel(20, 20);
+		WorldModel wm = new WorldModel(100, 100);
 		wm.printWorld();
 	}
 
-	public void outsideRocks()
+	public void rocks()
 	{
 		for (int i = 0; i < world.length; i++)
 		{
@@ -51,6 +51,109 @@ public class WorldModel {
 				made++;
 			}       
 		}
+	}
+
+	public void antHill()
+	{
+		int row = world.length/2;
+		int temp = 1;
+		int length = 6; 
+		for(int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2)-temp].setRAntHill(true);
+		}
+		row++;
+		temp++;
+		length++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		length++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		temp++;
+		length++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		length++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		temp++;
+		length++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		temp--;
+		length--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		length--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		temp--;
+		length--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		length--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+		row++;
+		temp--;
+		length--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setRAntHill(true);
+		}
+	}
+
+	public void food()
+	{
+		int row = world.length/2;
+		int temp = 1;
+		int length = 4; 
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setFood(true);
+			world[row][j+(world.length/2-temp)].setFoodAmount(5);
+		}
+		row++;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setFood(true);
+			world[row][j+(world.length/2-temp)].setFoodAmount(5);
+		}
+		row++;
+		temp--;
+		for (int j = 0; j < length; j++)
+		{
+			world[row][j+(world.length/2-temp)].setFood(true);
+			world[row][j+(world.length/2-temp)].setFoodAmount(5);
+		}
+
 	}
 
 
