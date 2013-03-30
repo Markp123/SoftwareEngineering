@@ -15,7 +15,6 @@ public class WorldModel {
 		model.printWorld();
 	}
 
-
 	public void printWorld()
 	{
 		boolean needSpace = false;

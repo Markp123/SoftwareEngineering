@@ -13,6 +13,7 @@ public class World {
 	private int start;
 	private int temp = 1;
 	private int length = 6;
+	private int randCol;
 
 	public World(int row, int column)
 	{
@@ -20,7 +21,8 @@ public class World {
 		world = new Cell[row][column];
 		rows = world.length;
 		columns = world.length;
-		start = world.length/2;
+		start = random.nextInt(world.length);
+		randCol = random.nextInt(world.length);
 		for (int i = 0; i < world.length; i++)
 		{                
 			for(int j = 0; j < world.length; j++)
@@ -29,8 +31,8 @@ public class World {
 				world[i][j] = cell;
 			}
 		}
+		redAntHill();
 		rocks();
-		antHill();
 	}
 
 	public Cell getCell(int row, int column)
@@ -61,15 +63,18 @@ public class World {
 		{
 			int tRow = random.nextInt(rows);
 			int tColumn = random.nextInt(columns);
-			if (!world[tRow][tColumn].getIsRock() && !(tRow == 0 && tColumn == 0))
+			if (!(world[tRow][tColumn].getIsRock() && !(tRow == 0 && tColumn == 0)))
 			{
+				if (!(world[tRow][tColumn].getIsRAntHill()) && !(world[tRow][tColumn].getIsBAntHill()))
+				{
 				world[tRow][tColumn].setRock(true);
 				made++;
-			}       
+				}
+			}   
 		}
 	}
 
-	public void antHill()
+	public void redAntHill()
 	{
 		if (recursive <12)
 		{
@@ -77,7 +82,7 @@ public class World {
 			{
 				for(int j = 0; j < length; j++)
 				{
-					world[start][j+(world.length/2)-temp].setRAntHill(true);
+					world[start][j+(randCol)-temp].setRAntHill(true);
 				}
 				count++;
 				skip++;
@@ -89,7 +94,7 @@ public class World {
 			{
 				for(int j = 0; j < length; j++)
 				{
-					world[start][j+(world.length/2)-temp].setRAntHill(true);
+					world[start][j+(randCol)-temp].setRAntHill(true);
 				}
 				count++;
 				start++;
@@ -99,7 +104,7 @@ public class World {
 			{
 				for(int j = 0; j < length; j++)
 				{
-					world[start][j+(world.length/2)-temp].setRAntHill(true);
+					world[start][j+(randCol)-temp].setRAntHill(true);
 				}
 				count++;
 				start++;
@@ -110,14 +115,14 @@ public class World {
 			{
 				for(int j = 0; j < length; j++)
 				{
-					world[start][j+(world.length/2)-temp].setRAntHill(true);
+					world[start][j+(randCol)-temp].setRAntHill(true);
 				}
 				count++;
 				start++;
 				length--;
 			}
 			recursive++;
-			antHill();	
+			redAntHill();	
 		}
 	}
 
