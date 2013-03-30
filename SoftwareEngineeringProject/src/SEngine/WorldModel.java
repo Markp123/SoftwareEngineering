@@ -7,6 +7,12 @@ public class WorldModel {
 	private Random random;
 	private int rows;
 	private int columns;
+	private int recursive;
+	private int skip = 0;
+	private int count = 0;
+	private int start;
+	private int temp = 1;
+	private int length = 6; 
 
 	public WorldModel(int row, int column)
 	{
@@ -14,6 +20,7 @@ public class WorldModel {
 		world = new Cell[row][column];
 		rows = world.length;
 		columns = world.length;
+		start = world.length/2;
 		for (int i = 0; i < world.length; i++)
 		{                
 			for(int j = 0; j < world.length; j++)
@@ -22,7 +29,7 @@ public class WorldModel {
 				world[i][j] = cell;
 			}
 		}
-		food();
+		antHill();
 	}
 
 	public static void main(String[] args)
@@ -55,78 +62,53 @@ public class WorldModel {
 
 	public void antHill()
 	{
-		int row = world.length/2;
-		int temp = 1;
-		int length = 6; 
-		for(int j = 0; j < length; j++)
+		if (recursive <12)
 		{
-			world[row][j+(world.length/2)-temp].setRAntHill(true);
-		}
-		row++;
-		temp++;
-		length++;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		length++;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		temp++;
-		length++;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		length++;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		temp++;
-		length++;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		temp--;
-		length--;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		length--;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		temp--;
-		length--;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		length--;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
-		}
-		row++;
-		temp--;
-		length--;
-		for (int j = 0; j < length; j++)
-		{
-			world[row][j+(world.length/2-temp)].setRAntHill(true);
+			if (count%2 == 0 && skip != 3)
+			{
+				for(int j = 0; j < length; j++)
+				{
+					world[start][j+(world.length/2)-temp].setRAntHill(true);
+				}
+				count++;
+				skip++;
+				temp++;
+				start++;
+				length++;
+			}
+			else if (count %2 != 0 && skip != 3)
+			{
+				for(int j = 0; j < length; j++)
+				{
+					world[start][j+(world.length/2)-temp].setRAntHill(true);
+				}
+				count++;
+				start++;
+				length++;
+			}
+			else if (count % 2 != 0 && skip == 3)
+			{
+				for(int j = 0; j < length; j++)
+				{
+					world[start][j+(world.length/2)-temp].setRAntHill(true);
+				}
+				count++;
+				start++;
+				length--;
+				temp--;
+			}
+			else
+			{
+				for(int j = 0; j < length; j++)
+				{
+					world[start][j+(world.length/2)-temp].setRAntHill(true);
+				}
+				count++;
+				start++;
+				length--;
+			}
+			recursive++;
+			antHill();	
 		}
 	}
 
