@@ -5,15 +5,11 @@ import java.util.Random;
 public class World {
 	private Cell[][] world;
 	private Random random;
-	private int rows;
-	private int columns;
-	private int recursive;
-	private int skip = 0;
-	private int count = 0;
-	private int start;
-	private int temp = 1;
+	private int rows, columns, randRow, randCol,skip, count, temp, recursive;
 	private int length = 6;
-	private int randCol;
+	private boolean randRowCorrect;
+	private boolean randColCorrect;
+	private boolean spaceClear;
 
 	public World(int row, int column)
 	{
@@ -21,8 +17,11 @@ public class World {
 		world = new Cell[row][column];
 		rows = world.length;
 		columns = world.length;
-		start = random.nextInt(world.length);
+		randRow = random.nextInt(world.length);
 		randCol = random.nextInt(world.length);
+		randRowCorrect = false;
+		randColCorrect = false;
+		spaceClear = false;
 		for (int i = 0; i < world.length; i++)
 		{                
 			for(int j = 0; j < world.length; j++)
@@ -31,14 +30,62 @@ public class World {
 				world[i][j] = cell;
 			}
 		}
+		checkRand();
 		redAntHill();
+		resetVariables();
+		checkSpaceClear(0);
+		resetVariables2();
+		blackAntHill();
 		rocks();
+	}
+
+	public void checkRand()
+	{
+		if (randRow != 0 && randRow < world.length -12)
+		{
+			randRowCorrect = true;
+		}
+		else
+		{
+
+		}
+		if (randCol > 5 && randCol < world.length-12)
+		{
+			randColCorrect = true;
+		}
+		else
+		{
+
+		}
+	}
+
+	public void resetVariables()
+	{
+		randRow = random.nextInt(world.length);
+		randCol = random.nextInt(world.length);
+		randRowCorrect = false;
+		randColCorrect = false;
+		skip = 0;
+		count = 0;
+		temp = 0;
+		recursive = 0;
+		length = 6;
+	}
+
+	public void resetVariables2()
+	{
+		skip = 0;
+		count = 0;
+		temp = 0;
+		recursive = 0;
+		length = 6;
 	}
 
 	public Cell getCell(int row, int column)
 	{
 		return world[row][column];
 	}
+
 	public int getRows() 
 	{
 		return rows;
@@ -67,63 +114,186 @@ public class World {
 			{
 				if (!(world[tRow][tColumn].getIsRAntHill()) && !(world[tRow][tColumn].getIsBAntHill()))
 				{
-				world[tRow][tColumn].setRock(true);
-				made++;
+					world[tRow][tColumn].setRock(true);
+					made++;
 				}
 			}   
+		}
+	}
+	
+	public void checkSpaceClear(int n)
+	{
+		while (!spaceClear)
+		{
+			if ((recursive < 11) && randRowCorrect && randColCorrect)
+			{
+				if (skip != 3)
+				{
+					for(int i = 0; i < length; i++)
+					{
+						if (getCell(randRow,(i+randCol)-temp).getIsRAntHill() == false);
+						{
+							n++;
+						}
+					}
+					if (count%2 == 0)
+					{
+						skip++;
+						temp++;
+					}
+					count++;
+					randRow++;
+					length++;
+				}
+				else if (skip == 3)
+				{
+					for(int j = 0; j < length; j++)
+					{
+						if (getCell(randRow,(j+randCol)-temp).getIsRAntHill() == false);
+						{
+							n++;
+						}
+					}
+					if (count % 2 != 0)
+					{
+						temp--;
+					}
+					count++;
+					randRow++;
+					length--;
+				}
+				recursive++;	
+				checkSpaceClear(n);
+			}
+			else if(!randRowCorrect || !randColCorrect)
+			{
+				if (!randRowCorrect)
+				{
+					randRow = random.nextInt(world.length);
+				}
+				if (!randColCorrect)
+				{
+					randCol = random.nextInt(world.length);
+				}
+				checkRand();
+			}
+			if (n == 91)
+			{
+				spaceClear = true;
+			}
+			else
+			{
+				n = 0;
+			}
+			checkRand();
 		}
 	}
 
 	public void redAntHill()
 	{
-		if (recursive <12)
+		if ((recursive < 11) && randRowCorrect && randColCorrect)
 		{
-			if (count%2 == 0 && skip != 3)
+			if (skip != 3)
 			{
-				for(int j = 0; j < length; j++)
+				for(int i = 0; i < length; i++)
 				{
-					world[start][j+(randCol)-temp].setRAntHill(true);
+					world[randRow][(i+randCol)-temp].setRAntHill(true);
+				}
+				if (count%2 == 0)
+				{
+					skip++;
+					temp++;
 				}
 				count++;
-				skip++;
-				temp++;
-				start++;
+				randRow++;
 				length++;
 			}
-			else if (count %2 != 0 && skip != 3)
+			else if (skip == 3)
 			{
 				for(int j = 0; j < length; j++)
 				{
-					world[start][j+(randCol)-temp].setRAntHill(true);
+					world[randRow][(j+randCol)-temp].setRAntHill(true);
 				}
-				count++;
-				start++;
-				length++;
-			}
-			else if (count % 2 != 0 && skip == 3)
-			{
-				for(int j = 0; j < length; j++)
+				if (count % 2 != 0)
 				{
-					world[start][j+(randCol)-temp].setRAntHill(true);
+					temp--;
 				}
 				count++;
-				start++;
-				length--;
-				temp--;
-			}
-			else
-			{
-				for(int j = 0; j < length; j++)
-				{
-					world[start][j+(randCol)-temp].setRAntHill(true);
-				}
-				count++;
-				start++;
+				randRow++;
 				length--;
 			}
-			recursive++;
-			redAntHill();	
+			recursive++;	
+			redAntHill();
 		}
+		else if(!randRowCorrect || !randColCorrect)
+		{
+			if (!randRowCorrect)
+			{
+				randRow = random.nextInt(world.length);
+			}
+			if (!randColCorrect)
+			{
+				randCol = random.nextInt(world.length);
+			}
+			checkRand();
+			redAntHill();
+		}
+		checkRand();
+	}
+
+	public void blackAntHill()
+	{
+		if ((recursive < 11) && randRowCorrect && randColCorrect)
+		{
+			if (spaceClear)
+			{
+				if (skip != 3)
+				{
+					for(int i = 0; i < length; i++)
+					{
+						world[randRow][(i+randCol)-temp].setBAntHill(true);
+					}
+					if (count%2 == 0)
+					{
+						skip++;
+						temp++;
+					}
+					count++;
+					randRow++;
+					length++;
+				}
+				else if (skip == 3)
+				{
+					for(int j = 0; j < length; j++)
+					{
+						world[randRow][(j+randCol)-temp].setBAntHill(true);
+					}
+					if (count % 2 != 0)
+					{
+						temp--;
+					}
+					count++;
+					randRow++;
+					length--;
+				}
+				recursive++;	
+				blackAntHill();
+			}
+		}
+		else if(!randRowCorrect || !randColCorrect)
+		{
+			if (!randRowCorrect)
+			{
+				randRow = random.nextInt(world.length);
+			}
+			if (!randColCorrect)
+			{
+				randCol = random.nextInt(world.length);
+			}
+			checkRand();
+			blackAntHill();
+		}
+		checkRand();
 	}
 
 	public void food()
