@@ -87,12 +87,95 @@ public class BrainParser {
 		if (isValid()) {
 			StringTokenizer tokenise;
 			String currentToken;
+			Instruction nextInstruction;
 			ArrayList<Instruction> antBrain = new ArrayList<Instruction>();
-			//iterate through each instruction, tokenise and 
-			//convert to instruction class
+			//tokenise each instruction and create instruction object
 			for (String instruction: brainInstructions) {
+				//tokenise current instruction
 				tokenise = new StringTokenizer(instruction);
+				//get instruction type
+				currentToken = tokenise.nextToken();
 				
+				if (currentToken.equalsIgnoreCase("sense")) {
+					Instruction sense;
+					String direct = tokenise.nextToken();
+					Direction dir = null;
+					//get direction enum
+					for (Direction d: Direction.values()) {
+						if (d.toString().equalsIgnoreCase(direct)) {
+							dir = d;
+						}
+					}
+					//get states
+					int st1 = Integer.parseInt(tokenise.nextToken());
+					int st2 = Integer.parseInt(tokenise.nextToken());
+					//get condition enum
+					String cond = tokenise.nextToken();
+					Condition con = null;
+					for (Condition cons: Condition.values()) {
+						if (cons.toString().equalsIgnoreCase(cond)) {
+							con = cons;
+						}
+					}
+					//if marker then get marker number
+					if (con.equals(Condition.MARKER)) {
+						int marker = Integer.parseInt(tokenise.nextToken());
+						sense = new Sense(dir, st1, st2, con, marker);
+					} else {
+						sense = new Sense(dir, st1, st2, con);
+					}
+					nextInstruction = sense;
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("mark")) {
+					int marker = Integer.parseInt(tokenise.nextToken());
+					int st = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Mark(marker, st);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("unmark")) {
+					int marker = Integer.parseInt(tokenise.nextToken());
+					int st = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Unmark(marker, st);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("pickup")) {
+					int st1 = Integer.parseInt(tokenise.nextToken());
+					int st2 = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new PickUp(st1, st2);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("drop")) {
+					int st = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Drop(st);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("turn")) {
+					String dir = tokenise.nextToken();
+					LeftRight lr = null;
+					if (dir.equalsIgnoreCase(LeftRight.LEFT.toString())) {
+						lr = LeftRight.LEFT;
+					} else if (dir.equalsIgnoreCase(LeftRight.RIGHT.toString())){
+						lr = LeftRight.RIGHT;
+					}
+					int st = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Turn(lr, st);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("move")) {
+					int st1 = Integer.parseInt(tokenise.nextToken());
+					int st2 = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Move(st1, st2);
+					antBrain.add(nextInstruction);
+					
+				} else if (currentToken.equalsIgnoreCase("flip")) {
+					int p = Integer.parseInt(tokenise.nextToken());
+					int st1 = Integer.parseInt(tokenise.nextToken());
+					int st2 = Integer.parseInt(tokenise.nextToken());
+					nextInstruction = new Flip(p, st1, st2);
+					antBrain.add(nextInstruction);
+				}
+					
 			}
 			return antBrain;
 			
@@ -101,10 +184,4 @@ public class BrainParser {
 			return null;
 		}
 	}
-	
-	public static void main(String[] args) {
-		BrainParser bp = new BrainParser("C:/Users/David/Desktop/testfile.brain");
-		System.out.println(bp.isValid());
-	}
-
 }

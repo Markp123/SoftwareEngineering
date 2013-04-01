@@ -27,5 +27,12 @@ public class Drop implements Instruction {
 		return state;
 	}
 	
+	/**
+	 * @return the string representing the instruction
+	 */
+	public String toString() {
+		return "Drop " + state;
+	}
+	
 	
 }

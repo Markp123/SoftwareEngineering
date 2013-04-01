@@ -7,7 +7,7 @@
  */
 public class Turn implements Instruction {
 	
-	private Direction direction;
+	private LeftRight lr;
 	private int state;
 	
 	/**
@@ -16,9 +16,9 @@ public class Turn implements Instruction {
 	 * @param direction the direction to turn
 	 * @param state 	the state to move to
 	 */
-	public Turn(Direction direction, int state) {
+	public Turn(LeftRight lr, int state) {
 		super();
-		this.direction = direction;
+		this.lr = lr;
 		this.state = state;
 	}
 	
@@ -26,8 +26,8 @@ public class Turn implements Instruction {
 	 * 
 	 * @return the direction to turn
 	 */
-	public Direction getDirection() {
-		return direction;
+	public LeftRight getDirection() {
+		return lr;
 	}
 	
 	/**
@@ -36,5 +36,12 @@ public class Turn implements Instruction {
 	 */
 	public int getState() {
 		return state;
+	}
+	
+	/**
+	 * @return string representing the instruction
+	 */
+	public String toString() {
+		return "Turn " + lr.toString() + " " + state;
 	}
 }

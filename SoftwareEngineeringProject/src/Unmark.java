@@ -38,6 +38,11 @@ public class Unmark implements Instruction {
 	public int getState() {
 		return state;
 	}
-
-
+	
+	/**
+	 * @return string representing the instruction
+	 */
+	public String toString() {
+		return "Unmark " + marker + " " + state;
+	}
 }

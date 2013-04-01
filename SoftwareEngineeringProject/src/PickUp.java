@@ -37,4 +37,11 @@ public class PickUp implements Instruction {
 	public int getState2() {
 		return state2;
 	}
+	
+	/**
+	 * @return string representing the instruction
+	 */
+	public String toString() {
+		return "PickUp " + state1 + " " + state2;
+	}
 }

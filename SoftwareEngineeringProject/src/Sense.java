@@ -29,6 +29,7 @@ public class Sense implements Instruction {
 		this.state1 = state1;
 		this.state2 = state2;
 		this.condition = condition;
+		this.marker = marker;
 	}
 	
 	/**
@@ -91,5 +92,10 @@ public class Sense implements Instruction {
 			throw new Exception("No associated marker");
 		}
 		
+	}
+	
+	public String toString() {
+		return "Sense " + direction.toString() + " " + state1 + " " 
+				+ state2 + " " + condition.toString() + " " + marker;
 	}
 }

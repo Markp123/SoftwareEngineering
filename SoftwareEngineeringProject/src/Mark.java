@@ -37,4 +37,11 @@ public class Mark implements Instruction {
 	public int getState() {
 		return state;
 	}
+	
+	/**
+	 * @return string representing the instruction
+	 */
+	public String toString() {
+		return "Mark " + marker + " " + state;
+	}
 }

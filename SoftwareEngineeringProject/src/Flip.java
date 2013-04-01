@@ -47,4 +47,11 @@ public class Flip implements Instruction {
 	public int getState2() {
 		return state2;
 	}
+	
+	/**
+	 * @return string representing the instruction
+	 */
+	 public String toString() {
+		 return "Flip " + p + " " + state1 + " " + state2;
+	}
 }
