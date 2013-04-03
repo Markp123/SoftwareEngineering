@@ -10,7 +10,7 @@ public class WorldModel {
 	
 	public static void main(String[] args)
 	{
-		World world = new World(100, 100);
+		World world = new World(150, 150);
 		WorldModel model = new WorldModel(world);
 		model.printWorld();
 	}
