@@ -6,10 +6,8 @@ public class World {
 	private Cell[][] world;
 	private Random random;
 	private int rows, columns, randRow, randCol, made;
-	private boolean randRowCorrect;
-	private boolean randColCorrect;
-	private boolean spaceClear;
-	private boolean foodSpaceClear;
+	private boolean randRowCorrect, randColCorrect, spaceClear, foodSpaceClear;
+
 
 	public World(int row, int column)
 	{
