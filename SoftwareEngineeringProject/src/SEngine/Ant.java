@@ -1,26 +1,23 @@
 package SEngine;
 
+import java.util.ArrayList;
+
 public class Ant {
 	private Colour colour;
 	private int state;
 	private int resting;
 	private int direction;
 	private boolean has_food;
-	private int brainNum;
-	public Ant(Colour colour, int brainNum){
+	private ArrayList<Instruction> brain;
+	public Ant(Colour colour, ArrayList<Instruction> brain){
 		direction = 0;
 		has_food = false;
 		state = 0;
 		resting = 0;
 		this.colour = colour;
-		this.brainNum = brainNum;
+		this.brain = brain;
 	}
-	public int getBrainNum() {
-		return brainNum;
-	}
-	public void setBrainNum(int brainNum) {
-		this.brainNum = brainNum;
-	}
+
 	public Colour getColour() {
 		return colour;
 	}
@@ -30,6 +27,14 @@ public class Ant {
 	public int getState() {
 		return state;
 	}
+	public Instruction getInstruction() {
+		return brain.get(state);
+	}
+
+	public void setBrain(ArrayList<Instruction> brain) {
+		this.brain = brain;
+	}
+
 	public void setState(int state) {
 		this.state = state;
 	}
