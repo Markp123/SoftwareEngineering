@@ -41,7 +41,7 @@ public class Ant {
 	public void setHas_food(boolean has_food) {
 		this.has_food = has_food;
 	}
-
+	/** returns the instruction from the brain of the state in this ant **/
 	public ArrayList<Instruction> getBrain() {
 		return brain;
 	}

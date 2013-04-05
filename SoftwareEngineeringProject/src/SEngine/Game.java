@@ -6,9 +6,23 @@ public class Game {
 	public Game(World world){
 		this.world = world;
 	}
+	
+    /**
+     * checks whether the ant of this id is still alive
+     * 
+     * @param id int
+     * @return boolean
+     */
 	private boolean ant_is_alive(int id){
 		return world.getAnt(id);
 	}
+	
+    /**
+     * Finds the position of the ant given it's id
+     * 
+     * @param id int
+     * @return p int[] array that represents cell position
+     */
 	private int[] find_ant(int id){
 		int p[] = new int[2];
 		if(ant_is_alive(id)){
@@ -31,13 +45,34 @@ public class Game {
 		}
 		return p;
 	}
+	
+    /**
+     * Checks whether this cell in this position is a rock
+     * 
+     * @param p int[] that represents cell position
+     * @return boolean
+     */
 	private boolean rocky(int[] p){
 		return world.getCell(p[0],p[1]).getIsRock();
 	}
+	
+    /**
+     * Returns the ant at given position
+     * 
+     * @param p in[] that represents cell position
+     * @return c.getAnt() Ant at the cell position
+     */
 	private Ant ant_at(int[] p){
 		Cell c = world.getCell(p[0],p[1]);
-		return null;
+		return c.getAnt();
 	}
+	
+    /**
+     * Checks how many food there is in the given position
+     * 
+     * @param p int[] that represents cell position
+     * @return int of amount of food
+     */
 	private int food_at(int[] p){
 		Cell c = world.getCell(p[0],p[1]);
 		if(c.getIsFood()){
@@ -47,6 +82,12 @@ public class Game {
 			return 0;
 		}
 	}
+    /**
+     * Method to access cell and set the food amount
+     * 
+     * @param p int[] that represents cell position
+     * @param food int the amount of food to set
+     */
 	private void set_food_at(int[] p, int food){
 		world.getCell(p[0], p[1]).setFood(true);
 		world.getCell(p[0], p[1]).setFoodAmount(food);
@@ -58,17 +99,39 @@ public class Game {
 		
 	}
 	private void clear_ant_at(int[] p){
-		
+		//clear the ant from this position
 	}
     private void set_ant_at(int[] newp, Ant a){
-    	
+    	//locate the ant to this position
     }
 	private boolean some_ant_is_at(int[] newp){
-		return false;
+		return false;//check if there's an ant at this position
 	}
+	
+    /**
+     * Counts the number of enemy ants surrounding the ant at this position
+     * 
+     * @param p int[] that represents cell position
+     * @param c Colour of the ant being surrounded
+     * @return int number of ants
+     */
     private int adjacent_ants(int[] p, Colour c){
-    	return 0;//returns amount of enemy ants around the ant in this position
+    	int antNum = 0;
+    	for (int d = 0; d <= 5; d++){
+	    	if(world.getCell(adjacent_cell(p,d)[0],adjacent_cell(p,d)[1]).getAnt().getColour()==other_color(c)){
+	    		antNum++;
+	    	}
+	    }
+    	return antNum;
     }
+    
+    /**
+     * returns a new direction of int after turning
+     * 
+     * @param lr enum representing left or right
+     * @param direction int representing direction
+     * @return direction int of it's new direction
+     */
 	private int Turn(LeftRight lr, int direction){
 		int dir=0;
 		switch(lr){
@@ -91,6 +154,13 @@ public class Game {
 		}
 		return dir;
 	}
+	
+    /**
+     * Switches colour from RED to BLACK and vice versa
+     * 
+     * @param c Colour to change
+     * @return col the colour that has been changed
+     */
 	private Colour other_color(Colour c){
 		Colour col = null;
 		switch(c){
@@ -103,6 +173,12 @@ public class Game {
 		}
 		return col;
 	}
+	
+    /**
+     * Checks if an ant is being surrounded enough to be killed and kills it if so
+     * 
+     * @param p int[] that represents cell position
+     */
     private void check_for_surrounded_ant_at(int[] p){
     	Ant a;
     	if (some_ant_is_at(p)){
@@ -117,7 +193,12 @@ public class Game {
             }
     	}
     }
-
+    
+    /**
+     * Runs method to check for ants being surrounded in given position and the positions around it
+     * 
+     * @param p int[] that represents cell position
+     */
     private void check_for_surrounded_ants(int[] p){
     	check_for_surrounded_ant_at(p);
 	    for (int d = 0; d <= 5; d++){
@@ -125,6 +206,11 @@ public class Game {
 	    }
     }
 	
+    /**
+     * Step method that makes an ant make a move
+     * 
+     * @param id int the id of the ant to move
+     */
 	private void step(int id){
 	  if (ant_is_alive(id)){
 	    int[] p = find_ant(id);
@@ -210,10 +296,69 @@ public class Game {
 	  }
 	}
 	
-	private boolean cell_matches(int[] p2, Condition condition, Colour colour) {
-		// TODO Auto-generated method stub
-	return false;
+    /**
+     * Checks if the cell matches the given condition
+     * 
+     * @param p int[] that represents cell position
+     * @param condition Condition enum of a status in a cell
+     * @param colour Colour the colour of the ant
+     * @return boolean of whether the condition is met
+     */
+	private boolean cell_matches(int[] p, Condition condition, Colour colour) {
+		boolean bool = false;
+		switch(condition){
+		case FRIEND:
+			bool = (world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			break;
+		case FOE:
+			bool = (world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			break;
+		case FRIENDWITHFOOD:
+			bool = (world.getCell(p[0],p[1]).getAnt().isHasFood() && world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			break;
+		case FOEWITHFOOD:
+			bool = (world.getCell(p[0],p[1]).getAnt().isHasFood() && world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			break;
+		case FOOD:
+			bool = world.getCell(p[0],p[1]).getIsFood();
+			break;
+		case ROCK:
+			bool = world.getCell(p[0],p[1]).getIsRock();
+			break;
+		case MARKER:
+			bool = false; //marker not implemented yet
+			break;
+		case FOEMARKER:
+			bool = false; //marker not implemented yet
+			break;
+		case HOME:
+			if(colour==Colour.RED){
+				bool = world.getCell(p[0],p[1]).getIsRAntHill();
+			}
+			else{
+				bool = world.getCell(p[0],p[1]).getIsBAntHill();
+			}
+			break;
+		case FOEHOME:
+			if(colour==Colour.BLACK){
+				bool = world.getCell(p[0],p[1]).getIsRAntHill();
+			}
+			else{
+				bool = world.getCell(p[0],p[1]).getIsBAntHill();
+			}
+			break;
+		}
+		return bool;
 	}
+	
+    /**
+     * returns the cell to be seensed after being given the direction attributes
+     * 
+     * @param p int[] that represents cell position
+     * @param direction int that represents the direction an ant is facing
+     * @param sense_dir Direction an enum of where the ant should sense
+     * @return x int[] the position of the cell to be sensed
+     */
 	private int[] sensed_cell(int[] p, int direction, Direction sense_dir){
 		int[] x = new int[2];
 		switch(sense_dir){
@@ -227,44 +372,65 @@ public class Game {
 		break;
 		}
 		return x;
-		}
-
-		private int[] adjacent_cell(int[] p, int direction){
-		     switch(direction){
-		     case 0: p[0]+=1;
-		     break;
-		     case 1: if((p[1] % 2) == 0){
-		}
-		else{
-		p[0]+=1;
-		}
-		p[1]+=1;
-		break;
-		     case 2: if((p[1] % 2) == 0){
-		     p[0]-=1;
-		}
-		p[1]+=1;
-		break;
-		     case 3: p[0]-=1;
-		break;
-		     case 4: if((p[1] % 2) == 0){
-		     p[0]-=1;
-		}
-		p[1]-=1;
-		break;
-		     case 5: if((p[1] % 2) == 0){
-		     p[0]+=1;
-		}
-		p[0]-=1;
-		break;
-		     }
-		     return p;
 	}
 
+    /**
+     * Returns the cell position towards the direction given
+     * 
+     * @param p int[] that represents cell position
+     * @param int direction the direction to face
+     * @return p int[] the new amended cell position
+     */
+	private int[] adjacent_cell(int[] p, int direction){
+	    switch(direction){
+		    case 0: p[0]+=1;
+		     break;
+	     	case 1: 
+	     		if((p[1] % 2) == 0){
+	     		}
+	     		else{
+				p[0]+=1;
+				}
+				p[1]+=1;
+			break;
+		     case 2: 
+		    	 if((p[1] % 2) == 0){
+		    		 p[0]-=1;
+		    	 }
+		    	 p[1]+=1;
+		    break;
+		     case 3: p[0]-=1;
+		    break;
+		     case 4: 
+		    	 if((p[1] % 2) == 0){
+		    		 p[0]-=1;
+		    	 }
+		    	 p[1]-=1;
+		    break;
+		     case 5:
+		    	 if((p[1] % 2) == 0){
+		    		 p[0]+=1;
+		    	 }
+		    	 p[0]-=1;
+		    break;
+		     }
+		return p;
+	}
+	
+    /**
+     * Random number generator for the thinking of the ant
+     * 
+     * @param n int the probability chance
+     * @return generator.nextInt(n) the int it produced
+     */
 	private int randomint(int n){
 		Random generator = new Random();
 		return generator.nextInt(n);
 	}
+	
+    /**
+     * The method to run and start the game
+     */
 	private void runGame(){
 		for(int rounds=0; rounds<300000; rounds++){
 			for(int i = 0; i<182; i++){//182 ants in the game?
