@@ -1,9 +1,8 @@
 package SEngine;
-
 public class Cell {
 	
 	private String image;
-	private boolean isFood, isRock, isRAntHill, isBAntHill, isEmpty;
+	private boolean isFood, isRock, isRAntHill, isBAntHill, isEmpty, antHill;
 	private int foodAmount;
 	
 	public Cell()
@@ -37,6 +36,11 @@ public class Cell {
 	public boolean getIsBAntHill() {
 		return isBAntHill;
 	}
+	
+	public boolean getIsAntHill()
+	{
+		return antHill;
+	}
 
 	public boolean getIsEmpty() {
 		return isEmpty;
@@ -61,6 +65,14 @@ public class Cell {
 		this.isBAntHill = isBAntHill;
 	}
 
+	public void setAntHill()
+	{
+		if(getIsRAntHill() || getIsBAntHill())
+		{
+			antHill = true;
+		}
+	}
+	
 	public void setEmpty(boolean isEmpty) 
 	{
 		this.isEmpty = isEmpty;
@@ -97,7 +109,7 @@ public class Cell {
 		}
 		else if (isBAntHill)
 		{
-			image = "-";
+			image = "B";
 		}
 		else if (isEmpty)
 		{
