@@ -43,6 +43,51 @@ public class World {
 		}
 		rocks();
 	}
+	
+	/**
+	 * Construct world from file
+	 * 
+	 * @param filename the location of the file
+	 */
+	public World(String filename) {
+		WorldReader wr = new WorldReader(filename);
+		String[][] worldArray = wr.read();
+		rows = wr.getRows();
+		columns = wr.getColumns();
+		Cell curCell;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				curCell = new Cell();
+				if (worldArray[i][j].equals("#")) {
+					curCell.setRock(true);
+					curCell.setImage("#");
+				} else if (worldArray[i][j].equals(".")) {
+					curCell.setEmpty(true);
+					curCell.setImage(".");
+				} else if (isNumeric(worldArray[i][j])) {
+					curCell.setFood(true);
+					curCell.setFoodAmount(Integer.parseInt(worldArray[i][j]));
+				} else if (worldArray[i][j].equals("+")) {
+					
+				}
+					
+			}	
+		}
+	}
+	
+	/**
+	 * Check that a string is a valid integer
+	 * @param s the string to check
+	 * @return true if an integer
+	 */
+	public boolean isNumeric(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException exc) {
+			return false;
+		}
+	}
 
 	public void checkRand()
 	{
