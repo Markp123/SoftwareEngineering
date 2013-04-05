@@ -1,5 +1,3 @@
-package SEngine;
-
 public class WorldModel {
 	private World world;
 	

@@ -1,5 +1,3 @@
-package SEngine;
-
 import java.util.Random;
 
 public class World {
