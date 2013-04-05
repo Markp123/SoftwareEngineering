@@ -1,5 +1,4 @@
 package SEngine;
-
 import java.util.Random;
 
 public class Game {
@@ -213,7 +212,7 @@ public class Game {
 	
 	private boolean cell_matches(int[] p2, Condition condition, Colour colour) {
 		// TODO Auto-generated method stub
-		return false;
+	return false;
 	}
 	private int[] sensed_cell(int[] p, int direction, Direction sense_dir){
 		int[] x = new int[2];
@@ -228,40 +227,40 @@ public class Game {
 		break;
 		}
 		return x;
+		}
+
+		private int[] adjacent_cell(int[] p, int direction){
+		     switch(direction){
+		     case 0: p[0]+=1;
+		     break;
+		     case 1: if((p[1] % 2) == 0){
+		}
+		else{
+		p[0]+=1;
+		}
+		p[1]+=1;
+		break;
+		     case 2: if((p[1] % 2) == 0){
+		     p[0]-=1;
+		}
+		p[1]+=1;
+		break;
+		     case 3: p[0]-=1;
+		break;
+		     case 4: if((p[1] % 2) == 0){
+		     p[0]-=1;
+		}
+		p[1]-=1;
+		break;
+		     case 5: if((p[1] % 2) == 0){
+		     p[0]+=1;
+		}
+		p[0]-=1;
+		break;
+		     }
+		     return p;
 	}
 
-	private int[] adjacent_cell(int[] p, int direction){
-    	switch(direction){
-    	case 0: p[0]+=1;
-    			break;
-    	case 1: if((p[1] % 2) == 0){
-				}
-				else{
-					p[0]+=1;
-				}
-				p[1]+=1;
-				break;
-    	case 2: if((p[1] % 2) == 0){
-    				p[0]-=1;
-				}
-				p[1]+=1;
-				break;
-    	case 3: p[0]-=1;
-				break;
-    	case 4: if((p[1] % 2) == 0){
-    				p[0]-=1;
-				}
-				p[1]-=1;
-				break;
-    	case 5: if((p[1] % 2) == 0){
-    				p[0]+=1;
-				}
-				p[0]-=1;
-				break;
-    	}
-    	return p;
-	}
-	
 	private int randomint(int n){
 		Random generator = new Random();
 		return generator.nextInt(n);
@@ -269,8 +268,8 @@ public class Game {
 	private void runGame(){
 		for(int rounds=0; rounds<300000; rounds++){
 			for(int i = 0; i<182; i++){//182 ants in the game?
-				step(i);
-				i++;
+			step(i);
+			i++;
 			}
 		}
 	}

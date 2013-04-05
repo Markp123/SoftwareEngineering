@@ -18,6 +18,38 @@ public class Ant {
 		this.brain = brain;
 	}
 
+	public int getResting() {
+		return resting;
+	}
+
+	public void setResting(int resting) {
+		this.resting = resting;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	public boolean isHas_food() {
+		return has_food;
+	}
+
+	public void setHas_food(boolean has_food) {
+		this.has_food = has_food;
+	}
+
+	public ArrayList<Instruction> getBrain() {
+		return brain;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
 	public Colour getColour() {
 		return colour;
 	}
@@ -33,27 +65,5 @@ public class Ant {
 
 	public void setBrain(ArrayList<Instruction> brain) {
 		this.brain = brain;
-	}
-
-	public void setState(int state) {
-		this.state = state;
-	}
-	public int getResting() {
-		return resting;
-	}
-	public void setResting(int resting) {
-		this.resting = resting;
-	}
-	public int getDirection() {
-		return direction;
-	}
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-	public boolean isHas_food() {
-		return has_food;
-	}
-	public void setHas_food(boolean has_food) {
-		this.has_food = has_food;
 	}
 }
