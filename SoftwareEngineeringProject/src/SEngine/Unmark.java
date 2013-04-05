@@ -1,11 +1,13 @@
+package SEngine;
 /**
  * Software Engineering Project 2013 
  * 
- * Representation of Mark instruction
+ * Representation of Unmark instruction
  * 
  * @author DCRichards
+ *
  */
-public class Mark implements Instruction {
+public class Unmark implements Instruction {
 	
 	private int marker;
 	private int state;
@@ -16,7 +18,7 @@ public class Mark implements Instruction {
 	 * @param marker the marker to place
 	 * @param state  the state to move to
 	 */
-	public Mark(int marker, int state) {
+	public Unmark(int marker, int state) {
 		super();
 		this.marker = marker;
 		this.state = state;
@@ -42,6 +44,6 @@ public class Mark implements Instruction {
 	 * @return string representing the instruction
 	 */
 	public String toString() {
-		return "Mark " + marker + " " + state;
+		return "Unmark " + marker + " " + state;
 	}
 }

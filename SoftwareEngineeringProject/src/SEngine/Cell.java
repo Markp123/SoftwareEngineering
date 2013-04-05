@@ -1,3 +1,4 @@
+package SEngine;
 public class Cell {
 	
 	private String image;
