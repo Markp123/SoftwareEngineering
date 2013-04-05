@@ -2,29 +2,49 @@ import java.util.Random;
 
 public class Game {
 	private World world;
-	private enum turn{
-		Left, Right;
-	}
-	private enum senseDir{
-		Here,Ahead,LeftAhead,RightAhead;
-	}
-	private enum Condition{
-		Friend, Foe, FriendWithFood, FoeWithFood, Food, Rock, Marker, FoeMarker, Home, FoeHome;
-	}
 	public Game(World world){
 		this.world = world;
 	}
 	private boolean ant_is_alive(int id){
-		return false;
+		return world.getAnt(id);
 	}
 	private int[] find_ant(int id){
-		return null;
+		int p[] = new int[2];
+		if(ant_is_alive(id)){
+			boolean found;
+			int x = 0;
+			int y = 0;
+			while(x < 150 && y < 150 || found){
+				p[0] = x;
+				p[1] = y;
+				Cell c = world.getCell(p[0],p[1]);
+				if(c.getAnt().getID()==id){
+					found = true;
+				}
+				x++;
+				y++;
+			}
+		}
+		else{
+			return null;
+		}
+		return p;
+	}
+	private boolean rocky(int[] p){
+		return world.getCell(p[0],p[1]).getIsRock();
 	}
 	private Ant ant_at(int[] p){
+		Cell c = world.getCell(p[0],p[1]);
 		return null;
 	}
 	private int food_at(int[] p){
-		return null;
+		Cell c = world.getCell(p[0],p[1]);
+		if(c.getIsFood()){
+			return c.getFoodAmount();
+		}
+		else{
+			return 0;
+		}
 	}
 	private void set_food_at(int[] p, int food){
 		
@@ -35,21 +55,72 @@ public class Game {
 	private void clear_marker_at(int[] p, Colour colour, int i){
 		
 	}
-	private void Turn(turn lr, int direction){
-		
-	}
 	private void clear_ant_at(int[] p){
 		
 	}
     private void set_ant_at(int[] newp, Ant a){
     	
     }
-	private boolean rocky(int[] p){
-		return false;
+
+    private int adjacent_ants(int[] p, Colour c){
+    	return 0;//returns amount of enemy ants around the ant in this position
+    }
+	private int Turn(LeftRight lr, int direction){
+		int dir=0;
+		switch(lr){
+		case LEFT:
+			if(direction==0){
+				dir = 5;
+			}
+			else{
+				dir = (direction-1);
+			}
+			break;
+		case RIGHT:
+			if(direction==5){
+				dir = 0;
+			}
+			else{
+				dir = (direction+1);
+			}
+			break;
+		}
+		return dir;
 	}
-	private void check_for_surrounded_ants(int[] newp){
-		
+	private Colour other_color(Colour c){
+		Colour col = null;
+		switch(c){
+		case RED:
+			col = Colour.BLACK;
+			break;
+		case BLACK:
+			col = Colour.RED;
+			break;
+		}
+		return col;
 	}
+    private void check_for_surrounded_ant_at(int[] p){
+    	Ant a;
+    	if (some_ant_is_at(p)){
+    		a = ant_at(p);
+    		if (adjacent_ants(p, other_color(a.getColour())) >= 5) {
+            	clear_ant_at(p);// need to check if method kills the ant
+            	int i = 0;
+            	if(a.isHas_food()){
+            		i = 1;
+            	}
+            	set_food_at(p, food_at(p) + 3 + i);	
+            }
+    	}
+    }
+
+    private void check_for_surrounded_ants(int[] p){
+    	check_for_surrounded_ant_at(p);
+	    for (int d = 0; d <= 5; d++){
+	    	check_for_surrounded_ant_at(adjacent_cell(p,d));
+	    }
+    }
+    	      
 	private boolean some_ant_is_at(int[] newp){
 		return false;
 	}
@@ -64,86 +135,89 @@ public class Game {
 	      a.setResting(a.getResting()-1);
 	    }
 	    else{
-	      switch(get_instruction(a.getColour(), a.getState())){
-	        case Sense(sensedir, st1, st2, cond):
-		        int[] p2 = sensed_cell(p, a.getDirection(), sensedir);
+	    	Instruction instr = get_instruction(a.getColour(), a.getState());
+	    	String name = instr.getClass().getName();
+	    	if(name.equals("Sense")){
+	    		int[] p2 = sensed_cell(p, a.getDirection(), instr.getDirection());
 		        int st;
-		        if(cell_matches(p2, cond, a.getColour())){
-		        	st = st1;
+		        if(cell_matches(p2, instr.getCondition, a.getColour())){
+		        	st = instr.getState1;
 		      	}
 		        else{
-		        	st = st2;
+		        	st = instr.getState2;
 		        }
 		        a.setState(st);
-		        break;
-	        case Mark(i, st):
-	        	set_marker_at(p, a.getColour(), i);
-	        	a.setState(st);
-	        	break;
-	        case Unmark(i, st):
-	        	clear_marker_at(p, a.getColour(), i);
-	        	a.setState(st);
-	        	break;
-	        case PickUp(st1, st2):
-	        	if(a.isHas_food() || food_at(p) == 0){
-	        		a.setState(st2);
+	    	}
+	    	else if(name.equals("Mark")){
+	    		set_marker_at(p, a.getColour(), instr.getMarker());
+	        	a.setState(instr.getState());
+	    	}
+	    	else if(name.equals("Unmark")){
+	    		clear_marker_at(p, a.getColour(), instr.getMarker());
+	        	a.setState(instr.getState());
+	    	}
+	    	else if(name.equals("PickUp")){
+	    		if(a.isHas_food() || food_at(p) == 0){
+	        		a.setState(instr.getState2());
 	        	}
 	        	else{
 	        		set_food_at(p, food_at(p) - 1);
 	            	a.setHas_food(true);
-	            	a.setState(st1);
+	            	a.setState(instr.getState1());
 	        	}
-	            break;
-	        case Drop(st):
-		        if(a.isHas_food()){
-			        set_food_at(p, food_at(p) + 1);
-			        a.setHas_food(false);
-			        a.setState(st);
-		        }
-	          break;
-	        case Turn(lr, st):
-		        setDirection(a, turn(lr, a.getDirection()));
-	        	a.setState(st);
-		        break;
-	        case Move(st1, st2):
-	        	int[] newp = adjacent_cell(p, a.getDirection());
+	    	}
+	    	else if(name.equals("Drop")){
+	    		 if(a.isHas_food()){
+				        set_food_at(p, food_at(p) + 1);
+				        a.setHas_food(false);
+				        a.setState(instr.getState());
+			        }
+	    	}
+	    	else if(name.equals("Turn")){
+	    		setDirection(a, turn(instr.getDirection(), a.getDirection()));
+	        	a.setState(instr.getState());
+	    	}
+	    	else if(name.equals("Move")){
+	    		int[] newp = adjacent_cell(p, a.getDirection());
 		        if(rocky(newp) || some_ant_is_at(newp)){
-		            set_state(a, st2);
+		            set_state(a, instr.getState2());
 		        }
 		        else{
 		            clear_ant_at(p);
 		            set_ant_at(newp, a);
-		            a.setState(st1);
+		            a.setState(instr.getState1());
 		            a.setResting(14);
 		            check_for_surrounded_ants(newp);
 		        }
-		        break;
-	        case Flip(n, st1, st2):
-	        	int st;
-		        if(randomint(n) == 0){
-		        	  st = st1
+	    	}
+	    	else if(name.equals("Flip")){
+	    		int st;
+		        if(randomint(instr.getP()) == 0){
+		        	  st = instr.getState1();
 		        }
 		        else{
-		        	st = st2;
+		        	st = instr.getState2();
 		        }
 		        a.setState(st);
-		        break;
+	    	}
 	      }
 	    }
 	  }
 	}
 	
-	private int[] sensed_cell(int[] p, int direction, senseDir sense_dir){
+	private int[] sensed_cell(int[] p, int direction, Direction sense_dir){
+		int[] x = new int[2];
 		switch(sense_dir){
-		case Here: return p;
+		case HERE: x = p;
 		break;
-		case Ahead: return adjacent_cell(p, direction);
+		case AHEAD: x = adjacent_cell(p, direction);
 		break;
-		case LeftAhead: return adjacent_cell(p, turn(Left, direction));
+		case LEFTAHEAD: x = adjacent_cell(p, Turn(LeftRight.LEFT, direction));
 		break;
-		case RightAhead: return adjacent_cell(p, turn(Right, direction));
+		case RIGHTAHEAD: x = adjacent_cell(p, Turn(LeftRight.RIGHT, direction));
 		break;
 		}
+		return x;
 	}
 
 	private int[] adjacent_cell(int[] p, int direction){
@@ -181,5 +255,13 @@ public class Game {
 	private int randomint(int n){
 		Random generator = new Random();
 		return generator.nextInt(n);
+	}
+	private void runGame(){
+		for(int rounds=0; rounds<300000; rounds++){
+			for(int i = 0; i<182; i++){//182 ants in the game?
+				step(i);
+				i++;
+			}
+		}
 	}
 }
