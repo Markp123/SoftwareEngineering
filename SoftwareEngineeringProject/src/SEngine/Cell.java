@@ -1,20 +1,36 @@
 package SEngine;
-public class Cell {
-	
-	private String image;
-	private boolean isFood, isRock, isRAntHill, isBAntHill, isEmpty, isAntHill;
-	private int foodAmount;
+
+import javax.swing.JButton;
+import java.awt.Dimension;
+
+public class Cell extends JButton 
+{
+	private String image = ".";
+	private boolean isFood = false;
+	private boolean isRock = false;
+	private boolean isRAntHill = false; 
+	private boolean isBAntHill = false; 
+	private boolean isEmpty = false;
+	private boolean isAntHill = false;
+	private int foodAmount = 0;
+	public static int preferredWidth = 45;
 	
 	public Cell()
 	{
-		image = "."; //Default Cell image (Empty Cell)
-		isFood = false;
-		isRock = false;
-		isRAntHill = false;
-		isBAntHill = false;
-		isEmpty = false;
-		foodAmount = 0;
-	}
+		super();
+		this.setPreferredSize(new Dimension(preferredWidth, preferredWidth));
+        this.setText(toString());
+	}        
+
+    public void updateTile()
+    {
+        this.setText(toString());
+    }
+
+    public static int getPreferredWidth() 
+    {
+        return preferredWidth;
+    }
 		
 	public void setFood(boolean isFood) 
 	{
