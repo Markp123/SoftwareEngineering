@@ -242,14 +242,14 @@ public class World {
 			{
 				for(int i = 0; i < length; i++)
 				{
-					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsAntHill() == false);
+					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsEmpty());
 					{
 						n++;
 					}
 				}
 				for(int j = 0; j < length; j++)
 				{
-					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsAntHill() == false);
+					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsEmpty());
 					{
 						n++;
 					}
