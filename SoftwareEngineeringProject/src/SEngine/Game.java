@@ -233,20 +233,10 @@ public class Game {
 		int dir=0;
 		switch(lr){
 		case LEFT:
-			if(direction==0){
-				dir = 5;
-			}
-			else{
-				dir = (direction-1);
-			}
+				dir = (direction+5) % 6;
 			break;
 		case RIGHT:
-			if(direction==5){
-				dir = 0;
-			}
-			else{
-				dir = (direction+1);
-			}
+				dir = (direction+1) % 6;
 			break;
 		}
 		return dir;
