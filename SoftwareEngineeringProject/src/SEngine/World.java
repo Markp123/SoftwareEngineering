@@ -27,6 +27,7 @@ public class World {
 				world[i][j] = cell;
 			}
 		}
+		resetVariables();
 		checkRand();
 		checkSpaceClear(0,0,0,0,15);
 		redAntHill(0,0,0,13);
@@ -50,6 +51,53 @@ public class World {
 			for(int j = 0; j < world.length; j++){
 				Cell cell = world[i][j];
 				cell.setEmpty(!(cell.getIsRock() || cell.getIsRAntHill() || cell.getIsBAntHill() || cell.getFoodAmount() > 0));
+			}
+		}
+	}
+
+	public void rockCheck()
+	{
+		if (randRow > 3 && randRow < world.length -3)
+		{
+			randRowCorrect = true;
+		}
+		else
+		{
+			randRowCorrect = false;
+		}
+		if (randCol > 3 && randCol < world.length-3)
+		{
+			randColCorrect = true;
+		}
+		else
+		{
+			randColCorrect = false;
+		}
+		while (!randRowCorrect || !randColCorrect)
+		{
+			if (!randRowCorrect)
+			{
+				if (randRow > 3 && randRow < world.length -3)
+				{
+					randRowCorrect = true;
+				}
+				else
+				{
+					randRowCorrect = false;
+					randRow = random.nextInt(world.length);
+				}
+			}
+			else if (!randColCorrect)
+			{
+				if (randCol > 3 && randCol < world.length-3)
+				{
+					randColCorrect = true;
+				}
+				else
+				{
+					randColCorrect = false;
+					randCol = random.nextInt(world.length);
+				}
 			}
 		}
 	}
@@ -152,7 +200,7 @@ public class World {
 		{
 			randRow = random.nextInt(world.length);
 			randCol = random.nextInt(world.length);
-			checkRand();
+			rockCheck();
 			for (int i = randRow - 1; i <= randRow + 1; i++)
 			{
 				for (int j = randCol - 1; j <= randCol + 1; j++)
@@ -166,7 +214,6 @@ public class World {
 							}
 						}
 					}
-
 					if (n == 9)
 					{
 						rockSpaceClear = true;
@@ -188,7 +235,7 @@ public class World {
 	{
 		while (!spaceClear)
 		{
-			if (recursive <8 && randRowCorrect && randColCorrect)
+			if (recursive <8)
 			{
 				for(int i = 0; i < length; i++)
 				{
@@ -213,10 +260,6 @@ public class World {
 				recursive++;
 				checkSpaceClear(n, temp, count, recursive, length);
 			}
-			else
-			{
-				checkRand();
-			}
 			if (n == 184)
 			{
 				spaceClear = true;
@@ -230,7 +273,6 @@ public class World {
 				length = 15;
 				resetVariables();
 				checkRand();
-				checkSpaceClear(n, temp, count, recursive, length);
 			}
 		}
 	}
@@ -304,7 +346,7 @@ public class World {
 	{
 		while (!foodSpaceClear)
 		{
-			if ((recursive < 4) && randRowCorrect && randColCorrect )
+			if (recursive < 4)
 			{
 				for(int i = 0; i < length; i++)
 				{
@@ -320,6 +362,7 @@ public class World {
 						n++;
 					}
 				}
+				count++;
 				recursive++;
 				findClearFoodSpace(n, length, count, recursive);
 			}
@@ -334,7 +377,6 @@ public class World {
 				count = 0;
 				resetFood();
 				checkRand();
-				findClearFoodSpace(n, length, count, recursive);
 			}
 		}
 	}
