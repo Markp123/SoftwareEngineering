@@ -20,7 +20,7 @@ public class World {
 		randColCorrect = false;
 		spaceClear = false;
 		for (int i = 0; i < world.length; i++)
-		{                
+		{
 			for(int j = 0; j < world.length; j++)
 			{
 				Cell cell = new Cell();
@@ -28,29 +28,55 @@ public class World {
 			}
 		}
 		checkRand();
-		redAntHill(0,0,0,randRow,0,6);
+		checkSpaceClear(0,0,0,0,15);
+		redAntHill(0,0,0,13);
 		resetVariables();
 		checkRand();
-		checkSpaceClear(0,0,0,0,randRow,0,6);
-		blackAntHill(0,0,0,randRow,0,6);
+		checkSpaceClear(0,0,0,0,15);
+		blackAntHill(0,0,0,13);
 		while(made<11)
 		{
-			resetVariables();
+			resetFood();
 			checkRand();
-			findClearFoodSpace(0, 0, 5, randRow);
-			food(0,5,randRow);
+			findClearFoodSpace(0, 7, 0, 0);
+			food(5, 0, 0);
 			made++;
 		}
 		rocks();
+		/**
+		 * bens code for setting all empty cells to empty, add into world
+		 */
+		for (int i = 0; i < world.length; i++){                
+			for(int j = 0; j < world.length; j++){
+				Cell cell = world[i][j];
+				cell.setEmpty(!(cell.getIsRock() || cell.getIsRAntHill() || cell.getIsBAntHill() || cell.getFoodAmount() > 0));
+			}
+		}
 	}
 
 	public void checkRand()
 	{
+		if (randRow > 8 && randRow < world.length -14)
+		{
+			randRowCorrect = true;
+		}
+		else
+		{
+			randRowCorrect = false;
+		}
+		if (randCol > 7 && randCol < world.length-14)
+		{
+			randColCorrect = true;
+		}
+		else
+		{
+			randColCorrect = false;
+		}
 		while (!randRowCorrect || !randColCorrect)
 		{
 			if (!randRowCorrect)
 			{
-				if (randRow != 0 && randRow < world.length -12)
+				if (randRow > 8 && randRow < world.length -14)
 				{
 					randRowCorrect = true;
 				}
@@ -62,7 +88,7 @@ public class World {
 			}
 			else if (!randColCorrect)
 			{
-				if (randCol > 5 && randCol < world.length-12)
+				if (randCol > 7 && randCol < world.length-14)
 				{
 					randColCorrect = true;
 				}
@@ -81,6 +107,18 @@ public class World {
 		randCol = random.nextInt(world.length);
 		randRowCorrect = false;
 		randColCorrect = false;
+		spaceClear = false;
+		checkRand();
+	}
+
+	public void resetFood()
+	{
+		randRow = random.nextInt(world.length);
+		randCol = random.nextInt(world.length);
+		randRowCorrect = false;
+		randColCorrect = false;
+		foodSpaceClear = false;
+		checkRand();
 	}
 
 	public Cell getCell(int row, int column)
@@ -88,12 +126,12 @@ public class World {
 		return world[row][column];
 	}
 
-	public int getRows() 
+	public int getRows()
 	{
 		return rows;
 	}
 
-	public int getColumns() 
+	public int getColumns()
 	{
 		return columns;
 	}
@@ -108,233 +146,222 @@ public class World {
 			world[world.length-1][i].setRock(true);
 		}
 		int made = 0;
-		while (made < 15)
+		int n =0;
+		boolean rockSpaceClear = false;
+		while (made < 14)
 		{
-			int tRow = random.nextInt(rows);
-			int tColumn = random.nextInt(columns);
-			if (!(world[tRow][tColumn].getIsRock() && !(tRow == 0 && tColumn == 0)))
+			randRow = random.nextInt(world.length);
+			randCol = random.nextInt(world.length);
+			checkRand();
+			for (int i = randRow - 1; i <= randRow + 1; i++)
 			{
-				if (!(world[tRow][tColumn].getIsRAntHill()) && !(world[tRow][tColumn].getIsBAntHill()))
+				for (int j = randCol - 1; j <= randCol + 1; j++)
 				{
-					world[tRow][tColumn].setRock(true);
-					made++;
+					if ((world[i][j].getIsRock() == false && (i == 0 && j == 0) == false))
+					{
+						if (!(world[i][j].getIsAntHill()) && !(world[i][j].getIsFood()))
+						{
+							{
+								n++;
+							}
+						}
+					}
+
+					if (n == 9)
+					{
+						rockSpaceClear = true;
+					}
+					
 				}
-			}   
+			}
+			if (rockSpaceClear)
+			{
+				world[randRow][randCol].setRock(true);
+				made++;
+				rockSpaceClear = false;
+			}
+			n = 0;
 		}
 	}
 
-	public void checkSpaceClear(int n, int half, int temp, int count, int randRow, int recursive, int length)
+	public void checkSpaceClear(int n, int temp, int count, int recursive, int length)
 	{
 		while (!spaceClear)
 		{
-			if ((recursive < 11) && randRowCorrect && randColCorrect)
-			{
-				if (half != 3)
-				{
-					for(int i = 0; i < length; i++)
-					{
-						if (getCell(randRow,(i+randCol)-temp).getIsRAntHill() == false);
-						{
-							n++;
-						}
-					}
-					if (count%2 == 0)
-					{
-						half++;
-					}
-					if (randRow % 2 == 0)
-					{
-						temp++;
-					}
-					count++;
-					randRow++;
-					length++;
-				}
-				else if (half == 3)
-				{
-					for(int j = 0; j < length; j++)
-					{
-						if (getCell(randRow,(j+randCol)-temp).getIsRAntHill() == false);
-						{
-							n++;
-						}
-					}
-					if (randRow % 2 != 0)
-					{
-						temp--;
-					}
-					count++;
-					randRow++;
-					length--;
-				}
-				recursive++;	
-				checkSpaceClear(n, half, temp, count, randRow, recursive, length);
-			}
-			else if(!randRowCorrect || !randColCorrect)
-			{
-				if (!randRowCorrect)
-				{
-					randRow = random.nextInt(world.length);
-				}
-				if (!randColCorrect)
-				{
-					randCol = random.nextInt(world.length);
-				}
-				checkRand();
-			}
-			if (n == 91)
-			{
-				spaceClear = true;
-			}
-			else
-			{
-				n = 0;
-			}
-			checkRand();
-		}
-	}
-
-	public void redAntHill(int half, int temp, int count, int randRow, int recursive, int length)
-	{
-		while (recursive < 11)
-		{
-			if (half != 3)
+			if (recursive <8 && randRowCorrect && randColCorrect)
 			{
 				for(int i = 0; i < length; i++)
 				{
-					world[randRow][(i+randCol)-temp].setRAntHill(true);
-				}
-				if (count%2 == 0)
-				{
-					half++;
-				}
-				if (randRow % 2 == 0)
-				{
-					temp++;
-				}
-				count++;
-				randRow++;
-				length++;
-			}
-			else if (half == 3)
-			{
-				for(int j = 0; j < length; j++)
-				{
-					world[randRow][(j+randCol)-temp].setRAntHill(true);
-				}
-				if (randRow % 2 != 0)
-				{
-					temp--;
-				}
-				count++;
-				randRow++;
-				length--;
-			}
-			recursive++;	
-			redAntHill(half, temp, count, randRow, recursive, length);
-		}
-
-	}
-
-	public void blackAntHill(int half, int temp, int count, int randRow, int recursive, int length)
-	{
-		while (recursive < 11)
-		{
-			if (spaceClear)
-			{
-				if (half != 3)
-				{
-					for(int i = 0; i < length; i++)
-					{
-						world[randRow][(i+randCol)-temp].setBAntHill(true);
-					}
-					if (count%2 == 0)
-					{
-						half++;
-					}
-					if (randRow % 2 == 0)
-					{
-						temp++;
-					}
-					count++;
-					randRow++;
-					length++;
-				}
-				else if (half == 3)
-				{
-					for(int j = 0; j < length; j++)
-					{
-						world[randRow][(j+randCol)-temp].setBAntHill(true);
-					}
-					if (randRow % 2 != 0)
-					{
-						temp--;
-					}
-					count++;
-					randRow++;
-					length--;
-				}
-				recursive++;	
-				blackAntHill(half, temp, count, randRow, recursive, length);
-			}
-		}
-	}
-
-	public void findClearFoodSpace(int n, int recursive, int length, int randRow)
-	{
-		while (!foodSpaceClear)
-		{
-			if ((recursive < 5) && randRowCorrect && randColCorrect )
-			{
-				for (int j = 0; j < length; j++)
-				{
-					if ((getCell(randRow,j+randCol).getIsRAntHill()) == false && (getCell(randRow,j+randCol).getIsBAntHill()) == false)
+					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsAntHill() == false);
 					{
 						n++;
 					}
 				}
-				randRow++;
+				for(int j = 0; j < length; j++)
+				{
+					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsAntHill() == false);
+					{
+						n++;
+					}
+				}
+				if ((randRow + count) % 2 != 0)
+				{
+					temp++;
+				}
+				count++;
+				length--;
 				recursive++;
-				findClearFoodSpace(n, recursive, length, randRow);
-			}
-			else if(!randRowCorrect || !randColCorrect)
-			{
-				if (!randRowCorrect)
-				{
-					randRow = random.nextInt(world.length);
-				}
-				if (!randColCorrect)
-				{
-					randCol = random.nextInt(world.length);
-				}
-				checkRand();
-			}
-			if (n == 25)
-			{
-				foodSpaceClear = true;
+				checkSpaceClear(n, temp, count, recursive, length);
 			}
 			else
 			{
-				n = 0;
+				checkRand();
 			}
-			checkRand();
+			if (n == 184)
+			{
+				spaceClear = true;
+			}
+			else if (recursive == 8 && spaceClear == false)
+			{
+				n = 0;
+				recursive = 0;
+				count = 0;
+				temp = 0;
+				length = 15;
+				resetVariables();
+				checkRand();
+				checkSpaceClear(n, temp, count, recursive, length);
+			}
 		}
 	}
 
-	public void food(int recursive, int length, int randRow)
+
+	public void redAntHill(int temp, int count, int recursive, int length)
 	{
-		while(recursive<6)
+		while (recursive < 7)
 		{
-			if(foodSpaceClear)
+			if (spaceClear)
 			{
-				for (int j = 0; j < length; j++)
+				for(int i = 0; i < length; i++)
 				{
-					world[randRow][j+randCol].setFood(true);
-					world[randRow][j+randCol].setFoodAmount(5);
+					{
+						world[randRow+count][(i+randCol)+temp].setRAntHill(true);
+						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
+					}
 				}
-				randRow++;
+				for(int j = 0; j < length; j++)
+				{
+					{
+						world[randRow-count][(j+randCol)+temp].setRAntHill(true);
+						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
+					}
+				}
+				if ((randRow + count) % 2 != 0)
+				{
+					temp++;
+				}
+				count++;
+				length--;
+			}
+			recursive++;
+			redAntHill(temp, count, recursive, length);
+		}
+	}
+
+	public void blackAntHill(int temp, int count, int recursive, int length)
+	{
+		while (recursive < 7)
+		{
+			if (spaceClear)
+			{
+				for(int i = 0; i < length; i++)
+				{
+					{
+						world[randRow+count][(i+randCol)+temp].setBAntHill(true);
+						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
+					}
+				}
+				for(int j = 0; j < length; j++)
+				{
+					{
+						world[randRow-count][(j+randCol)+temp].setBAntHill(true);
+						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
+					}
+				}
+				if ((randRow + count) % 2 != 0)
+				{
+					temp++;
+				}
+				count++;
+				length--;
+			}
+			recursive++;
+			blackAntHill(temp, count, recursive, length);
+		}
+	}
+
+	public void findClearFoodSpace(int n, int length, int count, int recursive)
+	{
+		while (!foodSpaceClear)
+		{
+			if ((recursive < 4) && randRowCorrect && randColCorrect )
+			{
+				for(int i = 0; i < length; i++)
+				{
+					if (!(getCell(randRow + count,(i+randCol)-1).getIsAntHill()) && !(getCell(randRow + count,i+randCol).getIsFood()))
+					{
+						n++;
+					}
+				}
+				for(int j = 0; j < length; j++)
+				{
+					if (!(getCell(randRow - count,(j+randCol)-1).getIsAntHill()) && !(getCell(randRow + count,j+randCol).getIsFood()))
+					{
+						n++;
+					}
+				}
 				recursive++;
-				food(recursive, length, randRow);
+				findClearFoodSpace(n, length, count, recursive);
+			}
+			if (n == 56)
+			{
+				foodSpaceClear = true;
+			}
+			else if (recursive == 4 && foodSpaceClear == false)
+			{
+				n = 0;
+				recursive = 0;
+				count = 0;
+				resetFood();
+				checkRand();
+				findClearFoodSpace(n, length, count, recursive);
+			}
+		}
+	}
+
+	public void food(int length, int count, int recursive)
+	{
+		while(recursive < 3)
+		{
+			if(foodSpaceClear == true)
+			{
+				for(int i = 0; i < length; i++)
+				{
+					{
+						world[randRow+count][i+randCol].setFood(true);
+						world[randRow+count][i+randCol].setFoodAmount(5);
+					}
+				}
+				for(int j = 0; j < length; j++)
+				{
+					{
+						world[randRow-count][j+randCol].setFood(true);
+						world[randRow-count][j+randCol].setFoodAmount(5);
+					}
+				}
+				recursive++;
+				count++;
+				food(length, count, recursive);
 			}
 		}
 	}
