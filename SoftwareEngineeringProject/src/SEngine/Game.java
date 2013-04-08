@@ -1,3 +1,4 @@
+
 package SEngine;
 import java.util.Random;
 import java.lang.Thread;
@@ -6,8 +7,47 @@ public class Game {
 	private World world;
 	public Game(World world){
 		this.world = world;
+		int antR = 0;
+		int antB = 0;
+		for(int x = 0; x<150; x++){
+			for(int y = 0; y<150; y++){
+				Cell c = world.getCell(x,y);
+				if(c.getIsRAntHill()){
+					c.setAnt(new Ant(Colour.RED, antR, brain1));
+					antR++;
+				}
+				else if(c.getIsBAntHill()){
+					c.setAnt(new Ant(Colour.BLACK, antB, brain2));
+					antB++;
+				}
+			}
+		}
 	}
 	
+	public void stats(){
+		int rAntsFood = 0;
+		int bAntsFood = 0;
+		for(int x = 0; x<150; x++){
+			for(int y = 0; y<150; y++){
+				Cell c = world.getCell(x,y);
+				if(c.getIsRAntHill()){
+					rAntsFood += c.getFoodAmount();
+				}
+				else if(c.getIsBAntHill()){
+					bAntsFood += c.getFoodAmount();
+				}
+			}
+		}
+		if(bAntsFood > rAntsFood){
+			//blk ants win
+		}
+		else if(rAntsFood > bAntsFood){
+			//red ants win
+		}
+		else{
+			//same food amount
+		}
+	}
     /**
      * checks whether the ant of this id is still alive
      * 
@@ -15,19 +55,18 @@ public class Game {
      * @return boolean
      */
 	private boolean ant_is_alive(int id, Colour col){
-		int p[] = new int[2];
 		boolean found = false;
 		int x = 0;
 		int y = 0;
 		while(x < 150 && y < 150 && !found){
-			p[0] = x;
-			p[1] = y;
-			Cell c = world.getCell(p[0],p[1]);
-			if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
-				found = true;
+			while(x < 150 && y < 150 && !found){
+				Cell c = world.getCell(x,y);
+				if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
+					found = true;
+				}
+				y++;
 			}
 			x++;
-			y++;
 		}
 		return found;
 	}
@@ -45,14 +84,16 @@ public class Game {
 			int x = 0;
 			int y = 0;
 			while(x < 150 && y < 150 && !found){
-				p[0] = x;
-				p[1] = y;
-				Cell c = world.getCell(p[0],p[1]);
-				if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
-					found = true;
+				while(x < 150 && y < 150 && !found){
+					p[0] = x;
+					p[1] = y;
+					Cell c = world.getCell(p[0],p[1]);
+					if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
+						found = true;
+					}
+					y++;
 				}
 				x++;
-				y++;
 			}
 		}
 		else{
