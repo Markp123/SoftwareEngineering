@@ -27,23 +27,6 @@ public class World {
 				world[i][j] = cell;
 			}
 		}
-		resetVariables();
-		checkRand();
-		checkSpaceClear(0,0,0,0,15);
-		redAntHill(0,0,0,13);
-		resetVariables();
-		checkRand();
-		checkSpaceClear(0,0,0,0,15);
-		blackAntHill(0,0,0,13);
-		while(made<11)
-		{
-			resetFood();
-			checkRand();
-			findClearFoodSpace(0, 7, 0, 0);
-			food(5, 0, 0);
-			made++;
-		}
-		rocks();
 		/**
 		 * bens code for setting all empty cells to empty, add into world
 		 */
@@ -53,6 +36,26 @@ public class World {
 				cell.setEmpty(!(cell.getIsRock() || cell.getIsRAntHill() || cell.getIsBAntHill() || cell.getFoodAmount() > 0));
 			}
 		}
+		resetVariables();
+		checkRand();
+		checkSpaceClear(0,0,0,0,15);
+		redAntHill(0,0,0,13);
+		spaceClear = false;
+		resetVariables();
+		checkRand();
+		checkSpaceClear(0,0,0,0,15);
+		blackAntHill(0,0,0,13);
+		spaceClear = false;
+		while(made<11)
+		{
+			findClearFoodSpace(0, 0, 0, 7);
+			food(0, 0, 5);
+			foodSpaceClear = false;
+			made++;
+		}
+		rocks();
+		
+		
 	}
 
 	public void rockCheck()
@@ -289,6 +292,7 @@ public class World {
 					{
 						world[randRow+count][(i+randCol)+temp].setRAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
+						world[randRow+count][(i+randCol)+temp].setEmpty(false);
 					}
 				}
 				for(int j = 0; j < length; j++)
@@ -296,6 +300,7 @@ public class World {
 					{
 						world[randRow-count][(j+randCol)+temp].setRAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
+						world[randRow-count][(j+randCol)+temp].setEmpty(false);
 					}
 				}
 				if ((randRow + count) % 2 != 0)
@@ -321,6 +326,8 @@ public class World {
 					{
 						world[randRow+count][(i+randCol)+temp].setBAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
+						world[randRow+count][(i+randCol)+temp].setEmpty(false);
+						
 					}
 				}
 				for(int j = 0; j < length; j++)
@@ -328,6 +335,7 @@ public class World {
 					{
 						world[randRow-count][(j+randCol)+temp].setBAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
+						world[randRow-count][(j+randCol)+temp].setEmpty(false);
 					}
 				}
 				if ((randRow + count) % 2 != 0)
@@ -342,7 +350,7 @@ public class World {
 		}
 	}
 
-	public void findClearFoodSpace(int n, int length, int count, int recursive)
+	public void findClearFoodSpace(int n, int count, int recursive, int length)
 	{
 		while (!foodSpaceClear)
 		{
@@ -350,21 +358,21 @@ public class World {
 			{
 				for(int i = 0; i < length; i++)
 				{
-					if (!(getCell(randRow + count,(i+randCol)-1).getIsAntHill()) && !(getCell(randRow + count,i+randCol).getIsFood()))
+					if (getCell(randRow+count,(i+randCol)-1).getIsEmpty())
 					{
 						n++;
 					}
 				}
 				for(int j = 0; j < length; j++)
 				{
-					if (!(getCell(randRow - count,(j+randCol)-1).getIsAntHill()) && !(getCell(randRow + count,j+randCol).getIsFood()))
+					if (getCell(randRow-count,(j+randCol)-1).getIsEmpty())
 					{
 						n++;
 					}
 				}
 				count++;
 				recursive++;
-				findClearFoodSpace(n, length, count, recursive);
+				findClearFoodSpace(n, count, recursive, length);
 			}
 			if (n == 56)
 			{
@@ -372,16 +380,15 @@ public class World {
 			}
 			else if (recursive == 4 && foodSpaceClear == false)
 			{
-				n = 0;
-				recursive = 0;
-				count = 0;
 				resetFood();
 				checkRand();
+				findClearFoodSpace(0,0,0,7);
+				
 			}
 		}
 	}
 
-	public void food(int length, int count, int recursive)
+	public void food(int count, int recursive, int length)
 	{
 		while(recursive < 3)
 		{
@@ -392,6 +399,7 @@ public class World {
 					{
 						world[randRow+count][i+randCol].setFood(true);
 						world[randRow+count][i+randCol].setFoodAmount(5);
+						world[randRow+count][i+randCol].setEmpty(false);
 					}
 				}
 				for(int j = 0; j < length; j++)
@@ -399,11 +407,12 @@ public class World {
 					{
 						world[randRow-count][j+randCol].setFood(true);
 						world[randRow-count][j+randCol].setFoodAmount(5);
+						world[randRow-count][j+randCol].setEmpty(false);
 					}
 				}
 				recursive++;
 				count++;
-				food(length, count, recursive);
+				food(count, recursive, length);
 			}
 		}
 	}
