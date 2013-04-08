@@ -1,5 +1,6 @@
 package SEngine;
 import java.util.Random;
+import java.lang.Thread;
 
 public class Game {
 	private World world;
@@ -13,8 +14,22 @@ public class Game {
      * @param id int
      * @return boolean
      */
-	private boolean ant_is_alive(int id){
-		return world.getAnt(id);
+	private boolean ant_is_alive(int id, Colour col){
+		int p[] = new int[2];
+		boolean found = false;
+		int x = 0;
+		int y = 0;
+		while(x < 150 && y < 150 && !found){
+			p[0] = x;
+			p[1] = y;
+			Cell c = world.getCell(p[0],p[1]);
+			if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
+				found = true;
+			}
+			x++;
+			y++;
+		}
+		return found;
 	}
 	
     /**
@@ -23,17 +38,17 @@ public class Game {
      * @param id int
      * @return p int[] array that represents cell position
      */
-	private int[] find_ant(int id){
+	private int[] find_ant(int id, Colour col){
 		int p[] = new int[2];
-		if(ant_is_alive(id)){
-			boolean found;
+		if(ant_is_alive(id, col)){
+			boolean found = false;
 			int x = 0;
 			int y = 0;
-			while(x < 150 && y < 150 || found){
+			while(x < 150 && y < 150 && !found){
 				p[0] = x;
 				p[1] = y;
 				Cell c = world.getCell(p[0],p[1]);
-				if(c.getAnt().getID()==id){
+				if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
 					found = true;
 				}
 				x++;
@@ -92,20 +107,61 @@ public class Game {
 		world.getCell(p[0], p[1]).setFood(true);
 		world.getCell(p[0], p[1]).setFoodAmount(food);
 	}
+    /**
+     * Method to access cell and set the marker
+     * 
+     * @param p int[] that represents cell position
+     * @param colour Colour which team the marker is for
+     * @param i int the marker no. to be set
+     */
 	private void set_marker_at(int[] p, Colour colour, int i){
-		
+		if(colour == Colour.BLACK){
+			world.getCell(p[0], p[1]).setBMarker(i);
+		}
+		else{
+			world.getCell(p[0], p[1]).setRMarker(i);
+		}
 	}
+    /**
+     * Method to access cell and remove the marker
+     * 
+     * @param p int[] that represents cell position
+     * @param colour Colour which team the marker is for
+     * @param i int the marker no. to be removed
+     */
 	private void clear_marker_at(int[] p, Colour colour, int i){
-		
+		if(colour == Colour.BLACK){
+			world.getCell(p[0], p[1]).removeBMarker(i);
+		}
+		else{
+			world.getCell(p[0], p[1]).removeRMarker(i);
+		}
 	}
+    /**
+     * Method to access cell and remove the ant
+     * 
+     * @param p int[] that represents cell position
+     */
 	private void clear_ant_at(int[] p){
-		//clear the ant from this position
+		world.getCell(p[0], p[1]).removeAnt();
 	}
-    private void set_ant_at(int[] newp, Ant a){
-    	//locate the ant to this position
+    /**
+     * Method to access cell and insert the ant
+     * 
+     * @param p int[] that represents cell position
+     * @param a Ant the ant to be inserted
+     */
+    private void set_ant_at(int[] p, Ant a){
+    	world.getCell(p[0], p[1]).setAnt(a);
     }
-	private boolean some_ant_is_at(int[] newp){
-		return false;//check if there's an ant at this position
+    /**
+     * Method to access cell and check if an ant exists in this cell
+     * 
+     * @param p int[] that represents cell position
+     * @return world.getCell(p[0], p[1]).isAnt() boolean for whether an ant exists
+     */
+	private boolean some_ant_is_at(int[] p){
+		return world.getCell(p[0], p[1]).isAnt();
 	}
 	
     /**
@@ -211,9 +267,9 @@ public class Game {
      * 
      * @param id int the id of the ant to move
      */
-	private void step(int id){
-	  if (ant_is_alive(id)){
-	    int[] p = find_ant(id);
+	private void step(int id, Colour colour){
+	  if (ant_is_alive(id, colour)){
+	    int[] p = find_ant(id, colour);
 	    Ant a = ant_at(p);
 	    if(a.getResting() > 0){
 	      a.setResting(a.getResting()-1);
@@ -314,10 +370,10 @@ public class Game {
 			bool = (world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
 			break;
 		case FRIENDWITHFOOD:
-			bool = (world.getCell(p[0],p[1]).getAnt().isHasFood() && world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == colour);
 			break;
 		case FOEWITHFOOD:
-			bool = (world.getCell(p[0],p[1]).getAnt().isHasFood() && world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
 			break;
 		case FOOD:
 			bool = world.getCell(p[0],p[1]).getIsFood();
@@ -433,10 +489,18 @@ public class Game {
      */
 	private void runGame(){
 		for(int rounds=0; rounds<300000; rounds++){
-			for(int i = 0; i<182; i++){//182 ants in the game?
-			step(i);
+			for(int i = 0; i<91; i++){//91 ants per team in the game?
+			step(i, Colour.RED);
+			step(i, Colour.BLACK);
 			i++;
 			}
+			try{
+				Thread.sleep(1000);//sleep for 1000ms
+			}
+			catch(Exception e){
+				//If thread interrupted by another thread
+			}
+			//refresh/update representation here
 		}
 	}
 }

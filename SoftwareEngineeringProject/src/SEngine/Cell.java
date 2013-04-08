@@ -14,6 +14,10 @@ public class Cell {
 		isBAntHill = false;
 		isEmpty = false;
 		foodAmount = 0;
+		
+		BMarker = new boolean[6];
+		RMarker = new boolean[6];
+		ant = null;
 	}
 	
 	public void setFood(boolean isFood) 
@@ -105,4 +109,34 @@ public class Cell {
 		return image;
 		
 	}
+	private Ant ant;
+	private boolean[] BMarker;
+	private boolean[] RMarker;
+
+	public Ant getAnt() {
+		return ant;
+	}
+	public boolean isAnt() {
+		return ant!=null;
+	}
+	public void setAnt(Ant ant) {
+		this.ant = ant;
+	}
+	public void removeAnt() {
+		this.ant = null;
+	}
+	public void setBMarker(int bMarker) {
+		BMarker[bMarker] = true;
+	}
+	public void removeBMarker(int bMarker) {
+		BMarker[bMarker] = false;
+	}
+
+	public void setRMarker(int rMarker) {
+		RMarker[rMarker] = true;
+	}
+	public void removeRMarker(int rMarker) {
+		RMarker[rMarker] = false;
+	}
+	
 }
