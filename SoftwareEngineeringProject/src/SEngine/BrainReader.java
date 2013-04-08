@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Software Engineering Project 2013
+ * 
  * Handles the basic file IO for reading an ant brain
  * 
  * @author DCRichards
@@ -17,9 +18,9 @@ public class BrainReader {
 	 * 
 	 * @param URL the URL of the file to read
 	 */
-	public BrainReader(String URL) {
+	public BrainReader(String filename) {
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(URL)));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 		} catch (FileNotFoundException fnf) {
 			//error message 
 		}
