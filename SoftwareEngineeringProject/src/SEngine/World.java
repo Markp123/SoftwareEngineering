@@ -1,4 +1,5 @@
 package SEngine;
+import java.io.IOException;
 import java.util.Random;
 
 public class World {
@@ -6,10 +7,12 @@ public class World {
 	private Random random;
 	private int rows, columns, randRow, randCol, made;
 	private boolean randRowCorrect, randColCorrect, spaceClear, foodSpaceClear;
+	private int generatedWorldNo;
 
 
 	public World(int row, int column)
 	{
+		generatedWorldNo = 0;
 		random = new Random();
 		world = new Cell[row][column];
 		rows = world.length;
@@ -45,7 +48,7 @@ public class World {
 	}
 	
 	/**
-	 * Construct world from file
+	 * Construct a new world from a file
 	 * 
 	 * @param filename the location of the file
 	 */
@@ -54,9 +57,11 @@ public class World {
 		String[][] worldArray = wr.read();
 		rows = wr.getRows();
 		columns = wr.getColumns();
+		world = new Cell[rows][columns];
 		Cell curCell;
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
+				//create new cell
 				curCell = new Cell();
 				if (worldArray[i][j].equals("#")) {
 					curCell.setRock(true);
@@ -67,24 +72,44 @@ public class World {
 				} else if (isNumeric(worldArray[i][j])) {
 					curCell.setFood(true);
 					curCell.setFoodAmount(Integer.parseInt(worldArray[i][j]));
+					curCell.setImage(worldArray[i][j]);
 				} else if (worldArray[i][j].equals("+")) {
-					
+					curCell.setRAntHill(true);
+					curCell.setImage("+");
+				} else if (worldArray[i][j].equals("-")) {
+					curCell.setBAntHill(true);
+					curCell.setImage("-");
 				}
-					
+				//store cell in world
+				world[i][j] = curCell;	
 			}	
 		}
 	}
 	
 	/**
 	 * Check that a string is a valid integer
+	 * 
 	 * @param s the string to check
 	 * @return true if an integer
 	 */
-	public boolean isNumeric(String s) {
+	private boolean isNumeric(String s) {
 		try {
 			Integer.parseInt(s);
 			return true;
 		} catch (NumberFormatException exc) {
+			return false;
+		}
+	}
+	
+	/**
+	 * write the current world to a world file
+	 * 
+	 * @return true if successful
+	 */
+	public boolean writeWorld() {
+		try {
+			return true;
+		} catch (IOException ioe) {
 			return false;
 		}
 	}
@@ -382,5 +407,9 @@ public class World {
 				food(recursive, length, randRow);
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		World wd = new World("C:/Users/David/Desktop/sample0.world");
 	}
 }

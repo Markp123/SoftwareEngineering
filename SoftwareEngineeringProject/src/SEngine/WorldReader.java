@@ -48,19 +48,6 @@ public class WorldReader {
 					worldArray[i][j] = line.nextToken();
 				}
 			}
-			
-			//test code for printing out world
-			System.out.println(rows);
-			System.out.println(columns);
-			for (int i = 0; i < rows; i++) {
-				if (i%2 != 0) {
-					System.out.print(" ");
-				}
-				for (int j = 0; j < columns; j++) {
-					System.out.print(worldArray[i][j] + " ");
-				}
-				System.out.println("");
-				}
 			return worldArray;
 		} catch (IOException ioe) {
 			//error
