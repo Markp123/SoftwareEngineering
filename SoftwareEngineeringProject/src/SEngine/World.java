@@ -4,7 +4,7 @@ import java.util.Random;
 public class World {
 	private Cell[][] world;
 	private Random random;
-	private int rows, columns, randRow, randCol, made, foodRecursive;
+	private int rows, columns, randRow, randCol, made;
 	private boolean randRowCorrect, randColCorrect, spaceClear, foodSpaceClear;
 
 
@@ -20,7 +20,7 @@ public class World {
 		randColCorrect = false;
 		spaceClear = false;
 		for (int i = 0; i < world.length; i++)
-		{                
+		{
 			for(int j = 0; j < world.length; j++)
 			{
 				Cell cell = new Cell();
@@ -43,6 +43,15 @@ public class World {
 			made++;
 		}
 		rocks();
+		/**
+		 * bens code for setting all empty cells to empty, add into world
+		 */
+		for (int i = 0; i < world.length; i++){
+			for(int j = 0; j < world.length; j++){
+				Cell cell = world[i][j];
+				cell.setEmpty(!(cell.getIsRock() || cell.getIsRAntHill() || cell.getIsBAntHill() || cell.getFoodAmount() > 0));
+			}
+		}
 	}
 
 	public void checkRand()
@@ -117,12 +126,12 @@ public class World {
 		return world[row][column];
 	}
 
-	public int getRows() 
+	public int getRows()
 	{
 		return rows;
 	}
 
-	public int getColumns() 
+	public int getColumns()
 	{
 		return columns;
 	}
@@ -161,16 +170,17 @@ public class World {
 					if (n == 9)
 					{
 						rockSpaceClear = true;
-						n = 0;
 					}
+
 				}
-			}   
+			}
 			if (rockSpaceClear)
 			{
 				world[randRow][randCol].setRock(true);
 				made++;
 				rockSpaceClear = false;
 			}
+			n = 0;
 		}
 	}
 
@@ -333,7 +343,7 @@ public class World {
 	{
 		while(recursive < 3)
 		{
-			if(foodSpaceClear  == true)
+			if(foodSpaceClear == true)
 			{
 				for(int i = 0; i < length; i++)
 				{
