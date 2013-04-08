@@ -38,8 +38,9 @@ public class WorldModel {
 	}
 	
 	public static void main(String[] args) {
-		//World world = new World(150, 150);
-		World world = new World("C:/Users/David/Desktop/sample0.world");
+		World world = new World(150, 150);
+		world.writeWorld();
+		//World world = new World("C:/Users/David/Desktop/sample0.world");
 		WorldModel model = new WorldModel(world);
 		model.printWorld();
 	}

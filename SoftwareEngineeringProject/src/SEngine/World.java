@@ -1,5 +1,5 @@
 package SEngine;
-import java.io.IOException;
+import java.io.*;
 import java.util.Random;
 
 public class World {
@@ -8,6 +8,7 @@ public class World {
 	private int rows, columns, randRow, randCol, made;
 	private boolean randRowCorrect, randColCorrect, spaceClear, foodSpaceClear;
 	private int generatedWorldNo;
+	private BufferedWriter worldWriter;
 
 
 	public World(int row, int column)
@@ -102,12 +103,33 @@ public class World {
 	}
 	
 	/**
-	 * write the current world to a world file
+	 * write the current world to a .world file
 	 * 
 	 * @return true if successful
 	 */
 	public boolean writeWorld() {
 		try {
+			worldWriter = new BufferedWriter(new FileWriter("generatedWorld" + generatedWorldNo + ".world"));
+			worldWriter.write(Integer.toString(rows));
+			worldWriter.newLine();
+			worldWriter.write(Integer.toString(columns));
+			worldWriter.newLine();
+			for (int i = 0; i < rows; i++) {
+				String currentLine = "";
+				if (i%2 != 0) {
+					currentLine += " ";
+				}
+				for (int j = 0; j < columns; j++) {
+					if (j != columns - 1) {
+						currentLine += world[i][j].toString() + " ";
+					} else {
+						currentLine += world[i][j].toString();
+					}
+				}
+				worldWriter.write(currentLine);
+				worldWriter.newLine();
+			}
+			worldWriter.close();
 			return true;
 		} catch (IOException ioe) {
 			return false;
@@ -410,6 +432,8 @@ public class World {
 	}
 	
 	public static void main(String[] args) {
-		World wd = new World("C:/Users/David/Desktop/sample0.world");
+		//World wd = new World("C:/Users/David/Desktop/sample0.world");
+		World wd = new World(150,150);
+		wd.writeWorld();
 	}
 }
