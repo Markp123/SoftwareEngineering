@@ -3,23 +3,21 @@ public class WorldModel {
 
 	private World world;
 	
-	public WorldModel(World world)
-	{
+	/**
+	 * Constructor for WorldModel 
+	 * 
+	 * @param world the world to be displayed
+	 */
+	public WorldModel(World world) {
 		this.world = world;
 	}
 	
-	public static void main(String[] args)
-	{
-		World world = new World(150, 150);
-		WorldModel model = new WorldModel(world);
-		model.printWorld();
-	}
-
-	public void printWorld()
-	{
+	/**
+	 * print a representation of the world
+	 */
+	public void printWorld() {
 		boolean needSpace = false;
-		for (int i = 0; i < world.getRows(); i++)
-		{
+		for (int i = 0; i < world.getRows(); i++) {
 			for (int j = 0; j < world.getColumns(); j++)
 			{
 				if (needSpace)
@@ -38,4 +36,12 @@ public class WorldModel {
 			needSpace = !needSpace;
 		}
 	}
+	
+	public static void main(String[] args) {
+		//World world = new World(150, 150);
+		World world = new World("C:/Users/David/Desktop/sample0.world");
+		WorldModel model = new WorldModel(world);
+		model.printWorld();
+	}
+
 }
