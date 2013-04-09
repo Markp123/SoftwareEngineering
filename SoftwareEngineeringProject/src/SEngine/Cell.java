@@ -1,10 +1,10 @@
 package SEngine;
 
+
 import javax.swing.JButton;
 import java.awt.Dimension;
 
-public class Cell extends JButton 
-{
+public class Cell extends JButton {
 	private String image = ".";
 	private boolean isFood = false;
 	private boolean isRock = false;
@@ -14,24 +14,25 @@ public class Cell extends JButton
 	private boolean isAntHill = false;
 	private int foodAmount = 0;
 	public static int preferredWidth = 45;
-	
-	public Cell()
-	{
+
+
+
+	public Cell() {
 		super();
 		this.setPreferredSize(new Dimension(preferredWidth, preferredWidth));
-        this.setText(toString());
+		this.setText(toString());
 	}        
 
-    public void updateTile()
-    {
-        this.setText(toString());
-    }
+	public void updateTile()
+	{
+		this.setText(toString());
+	}
 
-    public static int getPreferredWidth() 
-    {
-        return preferredWidth;
-    }
-		
+	public static int getPreferredWidth() 
+	{
+		return preferredWidth;
+	}
+
 	public void setFood(boolean isFood) 
 	{
 		this.isFood = isFood;
@@ -52,7 +53,7 @@ public class Cell extends JButton
 	public boolean getIsBAntHill() {
 		return isBAntHill;
 	}
-	
+
 	public boolean getIsAntHill()
 	{
 		return isAntHill;
@@ -85,7 +86,7 @@ public class Cell extends JButton
 	{
 		this.isAntHill = isAntHill;
 	}
-	
+
 	public void setEmpty(boolean isEmpty) 
 	{
 		this.isEmpty = isEmpty;
@@ -105,7 +106,7 @@ public class Cell extends JButton
 	{
 		this.image = newImage;
 	}
-	
+
 	public String toString()
 	{
 		if(isRock)
@@ -129,6 +130,6 @@ public class Cell extends JButton
 			image = ".";
 		}
 		return image;
-		
+
 	}
 }
