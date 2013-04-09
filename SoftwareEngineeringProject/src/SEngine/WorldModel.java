@@ -24,12 +24,11 @@ public class WorldModel {
 				{
 					System.out.print(" ");
 					System.out.print(world.getCell(i,j).toString());
-					System.out.print(" ");
 				}
 				else
 				{
 					System.out.print(world.getCell(i,j).toString());
-					System.out.print("  ");
+					System.out.print(" ");
 				}
 			}
 			System.out.println("");
