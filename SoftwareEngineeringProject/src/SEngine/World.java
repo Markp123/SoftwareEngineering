@@ -116,7 +116,7 @@ public class World {
 
 	/**
 	 * write the current world to a .world file
-	 * 
+	 *
 	 * @return true if successful
 	 */
 	public boolean writeWorld() {
@@ -515,4 +515,3 @@ public class World {
 
 
 }
-
