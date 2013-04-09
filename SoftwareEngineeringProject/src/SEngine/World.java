@@ -1,4 +1,5 @@
 package SEngine;
+import java.io.*;
 import java.util.Random;
 
 public class World {
@@ -6,10 +7,13 @@ public class World {
 	private Random random;
 	private int rows, columns, randRow, randCol, made;
 	private boolean randRowCorrect, randColCorrect, spaceClear, foodSpaceClear;
+	private int generatedWorldNo;
+	private BufferedWriter worldWriter;
 
 
 	public World(int row, int column)
 	{
+		generatedWorldNo = 0;
 		random = new Random();
 		world = new Cell[row][column];
 		rows = world.length;
@@ -54,8 +58,94 @@ public class World {
 			made++;
 		}
 		rocks();
-		
-		
+	}
+
+	/**
+	 * Construct a new world from a file
+	 *
+	 * @param filename the location of the file
+	 */
+	public World(String filename) {
+		WorldReader wr = new WorldReader(filename);
+		String[][] worldArray = wr.read();
+		rows = wr.getRows();
+		columns = wr.getColumns();
+		world = new Cell[rows][columns];
+		Cell curCell;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				//create new cell
+				curCell = new Cell();
+				if (worldArray[i][j].equals("#")) {
+					curCell.setRock(true);
+					curCell.setImage("#");
+				} else if (worldArray[i][j].equals(".")) {
+					curCell.setEmpty(true);
+					curCell.setImage(".");
+				} else if (isNumeric(worldArray[i][j])) {
+					curCell.setFood(true);
+					curCell.setFoodAmount(Integer.parseInt(worldArray[i][j]));
+					curCell.setImage(worldArray[i][j]);
+				} else if (worldArray[i][j].equals("+")) {
+					curCell.setRAntHill(true);
+					curCell.setImage("+");
+				} else if (worldArray[i][j].equals("-")) {
+					curCell.setBAntHill(true);
+					curCell.setImage("-");
+				}
+				//store cell in world
+				world[i][j] = curCell;
+			}
+		}
+	}
+
+	/**
+	 * Check that a string is a valid integer
+	 *
+	 * @param s the string to check
+	 * @return true if an integer
+	 */
+	private boolean isNumeric(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException exc) {
+			return false;
+		}
+	}
+
+	/**
+	 * write the current world to a .world file
+	 *
+	 * @return true if successful
+	 */
+	public boolean writeWorld() {
+		try {
+			worldWriter = new BufferedWriter(new FileWriter("generatedWorld" + generatedWorldNo + ".world"));
+			worldWriter.write(Integer.toString(rows));
+			worldWriter.newLine();
+			worldWriter.write(Integer.toString(columns));
+			worldWriter.newLine();
+			for (int i = 0; i < rows; i++) {
+				String currentLine = "";
+				if (i%2 != 0) {
+					currentLine += " ";
+				}
+				for (int j = 0; j < columns; j++) {
+					if (j != columns - 1) {
+						currentLine += world[i][j].toString() + " ";
+					} else {
+						currentLine += world[i][j].toString();
+					}
+				}
+				worldWriter.write(currentLine);
+				worldWriter.newLine();
+			}
+			worldWriter.close();
+			return true;
+		} catch (IOException ioe) {
+			return false;
+		}
 	}
 
 	public void rockCheck()
@@ -327,7 +417,7 @@ public class World {
 						world[randRow+count][(i+randCol)+temp].setBAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setEmpty(false);
-						
+
 					}
 				}
 				for(int j = 0; j < length; j++)
@@ -383,7 +473,7 @@ public class World {
 				resetFood();
 				checkRand();
 				findClearFoodSpace(0,0,0,7);
-				
+
 			}
 		}
 	}
@@ -415,5 +505,11 @@ public class World {
 				food(count, recursive, length);
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		//World wd = new World("C:/Users/David/Desktop/sample0.world");
+		World wd = new World(150,150);
+		wd.writeWorld();
 	}
 }
