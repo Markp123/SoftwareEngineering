@@ -7,15 +7,26 @@ public class Ant {
 	private int state;
 	private int resting;
 	private int direction;
+	private int id;
 	private boolean has_food;
 	private ArrayList<Instruction> brain;
-	public Ant(Colour colour, ArrayList<Instruction> brain){
+	
+	public Ant(Colour colour, int id, ArrayList<Instruction> brain){
 		direction = 0;
 		has_food = false;
 		state = 0;
 		resting = 0;
 		this.colour = colour;
 		this.brain = brain;
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getResting() {
