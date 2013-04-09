@@ -15,8 +15,6 @@ public class Cell extends JButton {
 	private int foodAmount = 0;
 	public static int preferredWidth = 45;
 
-
-
 	public Cell() {
 		super();
 		this.setPreferredSize(new Dimension(preferredWidth, preferredWidth));
