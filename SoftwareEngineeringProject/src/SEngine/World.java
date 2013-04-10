@@ -317,6 +317,7 @@ public class World {
 			if (rockSpaceClear)
 			{
 				world[randRow][randCol].setRock(true);
+				world[randRow][randCol].setEmpty(false);
 				made++;
 				rockSpaceClear = false;
 			}
