@@ -118,7 +118,15 @@ public class Cell extends JButton {
 
 	public String toString()
 	{
-		if(isRock)
+		if(isAnt()){
+			if(getAnt().getColour()==Colour.RED){
+				image = "£";
+			}
+			else{
+				image = "$";
+			}
+		}
+		else if(isRock)
 		{
 			image = "#";
 		}

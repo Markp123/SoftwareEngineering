@@ -1,11 +1,15 @@
 
 package SEngine;
+import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Thread;
 
 public class Game {
 	private World world;
 	public Game(World world){
+		ArrayList<Instruction> brain1 = new BrainParser("src/cleverbrain1.brain").parseBrain();
+		ArrayList<Instruction> brain2 = new BrainParser("src/cleverbrain2.brain").parseBrain();
+		System.out.println(brain1.get(0).getClass().getName());
 		this.world = world;
 		int antR = 0;
 		int antB = 0;
@@ -22,6 +26,11 @@ public class Game {
 				}
 			}
 		}
+		runGame();
+	}
+	
+	public static void main(String[] args) {
+		new Game(new World(150,150));
 	}
 	
 	public void stats(){
@@ -58,14 +67,17 @@ public class Game {
 		boolean found = false;
 		int x = 0;
 		int y = 0;
-		while(x < 150 && y < 150 && !found){
-			while(x < 150 && y < 150 && !found){
+		while(x < 150 && !found){
+			while(y < 150 && !found){
 				Cell c = world.getCell(x,y);
-				if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
-					found = true;
+				if(c.isAnt()){
+					if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
+						found = true;
+					}
 				}
 				y++;
 			}
+			y = 0;
 			x++;
 		}
 		return found;
@@ -83,16 +95,19 @@ public class Game {
 			boolean found = false;
 			int x = 0;
 			int y = 0;
-			while(x < 150 && y < 150 && !found){
-				while(x < 150 && y < 150 && !found){
+			while(x < 150 && !found){
+				while(y < 150 && !found){
 					p[0] = x;
 					p[1] = y;
 					Cell c = world.getCell(p[0],p[1]);
-					if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
-						found = true;
+					if(c.isAnt()){
+						if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
+							found = true;
+						}
 					}
 					y++;
 				}
+				y = 0;
 				x++;
 			}
 		}
@@ -519,6 +534,8 @@ public class Game {
      * The method to run and start the game
      */
 	private void runGame(){
+		WorldModel model = new WorldModel(world);
+		
 		for(int rounds=0; rounds<300000; rounds++){
 			for(int i = 0; i<91; i++){//91 ants per team in the game?
 			step(i, Colour.RED);
@@ -531,6 +548,7 @@ public class Game {
 			catch(Exception e){
 				//If thread interrupted by another thread
 			}
+			model.printWorld();
 			//refresh/update representation here
 		}
 	}
