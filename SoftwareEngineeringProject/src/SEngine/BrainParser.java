@@ -69,7 +69,7 @@ public class BrainParser {
 		while (valid && i < brainInstructions.size()) {
 			match = false;
 			while (!match && j < syntax.size()) {
-				match = brainInstructions.get(i).matches(syntax.get(j));
+				match = brainInstructions.get(i).toLowerCase().matches(syntax.get(j).toLowerCase());
 				j++;
 			}
 			valid = match;
