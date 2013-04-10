@@ -56,7 +56,7 @@ public class BrainParser {
 	 */
 	public boolean isValid() {
 		//check for valid number of states
-		if (brainInstructions.size() > 1000) {
+		if (brainInstructions.size() > 10000) {
 			return false;
 		}
 		//check that instructions use correct syntax
@@ -69,7 +69,7 @@ public class BrainParser {
 		while (valid && i < brainInstructions.size()) {
 			match = false;
 			while (!match && j < syntax.size()) {
-				match = brainInstructions.get(i).matches(syntax.get(j));
+				match = brainInstructions.get(i).toLowerCase().matches(syntax.get(j).toLowerCase());
 				j++;
 			}
 			valid = match;
