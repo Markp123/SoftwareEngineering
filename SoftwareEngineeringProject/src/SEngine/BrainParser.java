@@ -56,7 +56,7 @@ public class BrainParser {
 	 */
 	public boolean isValid() {
 		//check for valid number of states
-		if (brainInstructions.size() > 1000) {
+		if (brainInstructions.size() > 10000) {
 			return false;
 		}
 		//check that instructions use correct syntax
