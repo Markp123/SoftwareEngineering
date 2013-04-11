@@ -38,6 +38,7 @@ public class BrainReader {
 			//read each line of the file in turn
 			while ((currentLine = reader.readLine()) != null) {
 				lines.add(currentLine);
+				System.out.println(currentLine);
 			}
 		} catch (IOException ex) {
 			//error message
