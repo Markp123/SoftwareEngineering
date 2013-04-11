@@ -1,51 +1,174 @@
 package SEngine;
 
 import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * During the tournament, each pair of submissions is pitted against each other twice on each of the contest worlds
+ * ---once with the first submission playing red and the second black, and once with the first playing black and the second red.
+ *  A submission gains 2 points for each game it wins, and 1 point for each draw. 
+ *  The submission with the most points wins the tournament. 
+ *  The number of the worlds used during the tournament is unspecified, but will be large enough for determining a clear winner. 
+ *  If there is nevertheless no clear winner, the tournament is repeated with a certain number of finalist submissions.
+ */
 public class Tournament {
-	private List<List<Instruction>> brainsInTournament = new ArrayList<List<Instruction>>();
-
+	private List<BrainParser> brainsInTournament = new ArrayList<BrainParser>();
+	private HashMap<BrainParser,Integer> brainScores = new HashMap<BrainParser,Integer>();
+	private List<World> worldsInTournament = new ArrayList<World>();
+	private int numberOfWorldsInTournament = 5;
+	BufferedWriter testWriter;
+	
 	public static void main(String[] args) {
 		Tournament t = new Tournament();
 	}
 	
+
 	public Tournament(){
+		this.test();
 		
-		this.uploadBrain(new BrainParser("brain1.txt").parseBrain());
-		this.uploadBrain(new BrainParser("brain2.txt").parseBrain());
-		//System.out.println(checkIfBrainsInTournamentAreValid());
-		//World theWorld = new World("C:/btrs20/badWorld.txt");
-		World theWorld = new World(150,150);
-		new WorldModel(theWorld).printWorld();
-		System.out.println(determineWhetherContestWorldValid(theWorld));
+
+		
+		
+//		setupTournament();
+//		System.out.println(holdTournament());
 	}
 	
+	/**
+	 * Test syntax checker on purpose built worlds and write results to an excel file.
+	 */
+	private void test(){
+		try {
+			testWriter = new BufferedWriter(new FileWriter("Testing.xls"));
+			testWriter.write("\tWorld 150 by 150\tBoarders rocky\tEdge free of elements\tRock Count\tFood blob count\tRed anthill valid\tBlack anthill valid\tWorld valid overall\n");
+			
+			for (int i = 1; i <= 55; i++){
+				String s = "TestWorlds/test" + i + ".world";
+				testWriter.write("test" + i + "\t");
+				testWriter.write(determineWhetherContestWorldValid(new World(s)) + "\n");
+			}
+			testWriter.close();
+		} catch (IOException e) {
+			System.out.println("write error");
+		}
+	}
 	
+
+	/**
+	 * Populate lists containing the brains in tournament and worlds in tournament. 
+	 */
+	private void setupTournament(){
+		//populate brains
+		this.uploadBrain(new BrainParser("brain1.txt"));
+		this.uploadBrain(new BrainParser("brain2.txt"));
+		this.uploadBrain(new BrainParser("horseshoe-1.txt"));
+		this.uploadBrain(new BrainParser("snakebrain.txt"));
+		
+		
+		if(brainsInTournamentAreValid()){
+			//populate worlds
+			int count = 0;
+			while (count < numberOfWorldsInTournament){
+				World theWorld = new World(150,150);
+				if (determineWhetherContestWorldValid(theWorld)){
+					worldsInTournament.add(theWorld);
+					count++;
+				}
+			}
+		} else {
+			System.out.println("There are invalid brains in the tournament");
+		}
+	}
+		
+	/**
+	 * Once the tournament has been setup, this class pits each brain against each other brain 
+	 * twice (each brain plays as both red and black) per world. The winner of the tournament
+	 * is the brain which receives the most points. Two points are allocated for a win, one for
+	 * a draw.
+	 * 
+	 * @return winning brain
+	 */
+	private BrainParser holdTournament(){
+		for (World w : worldsInTournament){
+			for (int i = 0; i < brainsInTournament.size(); i++){
+				BrainParser b1 = brainsInTournament.get(i);
+
+				for (int j = i; j < brainsInTournament.size(); j++){
+					BrainParser b2 = brainsInTournament.get(j);
+					if (b1 != b2){ 
+
+//						Game game1 = new Game(b1,b2, theWorld);
+//						String winner = game1.stats();
+//						if (winner.equals("red")){
+//							brainScores.put(b1,brainScores.get(b1) + 2);
+//						} else if (winner.equals("black")){
+//							brainScores.put(b2,brainScores.get(b2) + 2);
+//						} else {
+//							brainScores.put(b1,brainScores.get(b1) + 1);
+//							brainScores.put(b2,brainScores.get(b2) + 1);
+//						}
+
+						/**
+						 * Swap colours
+						 */
+//						Game game2 = new Game(b2,b1, theWorld);
+//						String winner = game1.stats();
+//						if (winner.equals("red")){
+//							brainScores.put(b2,brainScores.get(b1) + 2);
+//						} else if (winner.equals("black")){
+//							brainScores.put(b1,brainScores.get(b2) + 2);
+//						} else {
+//							brainScores.put(b1,brainScores.get(b1) + 1);
+//							brainScores.put(b2,brainScores.get(b2) + 1);
+//						}
+					}
+				}
+			}
+		}
+		return determineWinner();
+	}
+	
+	/**
+	 * Calculate which brain received the most points during the tournament
+	 * 
+	 * @return winning brain
+	 */
+	public BrainParser determineWinner(){
+		BrainParser winner = null;
+		int winningScore = 0;
+		for (BrainParser brain : brainScores.keySet()){
+			if(brainScores.get(brain) > winningScore){
+				winner = brain;
+				winningScore = brainScores.get(brain);
+			}
+		}
+		return winner;
+	}
+		
 	/**
 	 * code which allows multiple brains to be uploaded to a tournament, tournament then checks
 	 * whether brains are syntactically valid. Commented out cause this has been done in a 
 	 * different section of program. Left code in just in case its needed in future.
 	 */
-	private void uploadBrain(List<Instruction> brain){
+	private void uploadBrain(BrainParser brain){
 		brainsInTournament.add(brain);
+		brainScores.put(brain,0);
 	}
 	
-//	public boolean checkIfBrainsInTournamentAreValid(){
-//		//Check whether brain is syntactically well formed by comparing each line against regular expression above.
-//		boolean syntacticallyWellFormed = true;
-//		int brainCount = 0;
-//		while (brainCount < brainsInTournament.size() && syntacticallyWellFormed){
-//			List<String> instructions = brainsInTournament.get(brainCount++).getInstructions();
-//			int instructionCount = 0;
-//			while(syntacticallyWellFormed && instructionCount < instructions.size()){
-//				syntacticallyWellFormed = determineWhetherBrainSyntacticallyValid(instructions.get(instructionCount++));
-//			}
-//		}
-//		return syntacticallyWellFormed;
-//	}
+	public boolean brainsInTournamentAreValid(){
+		//Check whether brain is syntactically well formed by comparing each line against regular expression above.
+		boolean syntacticallyWellFormed = true;
+		int brainCount = 0;
+		while (brainCount < brainsInTournament.size() && syntacticallyWellFormed){
+			syntacticallyWellFormed = brainsInTournament.get(brainCount++).isValid();
+		}
+		return syntacticallyWellFormed;
+	}
 
 //	private boolean determineWhetherBrainSyntacticallyValid(String brainInstruction){
 //		//Setup Regular Expression String.
@@ -88,6 +211,15 @@ public class Tournament {
 	 */
 	private boolean determineWhetherContestWorldValid(World world){
 		boolean valid = true;
+		
+		try {
+			testWriter.write((world.getColumns() == 150 && world.getRows() == 150) + "\t");
+			if((world.getColumns() == 150 && world.getRows() == 150)){
+				testWriter.write(checkRockyBoarders(world) + "\t");
+				testWriter.write(checkNoElementsOnEdge(world) + "\t");
+			}
+		} catch (IOException e) {
+		}
 		valid = (world.getColumns() == 150 
 			&& world.getRows() == 150
 			&& checkRockyBoarders(world))
@@ -183,10 +315,6 @@ public class Tournament {
 						//check that elements above and below food blob are empty cells
 						while (count < 7 && worldValid){
 							worldValid = world.getCell(i-1, j+count-1).getIsEmpty() && world.getCell(i+5, j+count-1).getIsEmpty();
-							//worldValid = world.getCell(j-1, i+count-1).getIsEmpty() && world.getCell(j+5, i+count-1).getIsEmpty();
-							
-							//worldValid = world.getCell(i-1, j+count-(i-1)%2).getIsEmpty() && world.getCell(i+5, j+count-(i+5)%2).getIsEmpty();
-							//worldValid = world.getCell(i-(j-1)%2, i-1).getIsEmpty() && world.getCell(xStart+count-(yStart+13)%2, yStart+13).getIsEmpty();
 							count++;
 						}
 						//check that actual food particles are present
@@ -215,8 +343,19 @@ public class Tournament {
 			}	
 			i++;
 		}
-		//doesnt yet check whether food covers anthills
-		return rockCount == 14 && worldValid && checkAnthill(bAntHillLocations,world) && checkAnthill(rAntHillLocations,world) && foodBlobCount == 11;
+		
+		/**
+		 * Write variable values to test file.
+		 */
+		try {
+			testWriter.write(rockCount + "\t");
+			testWriter.write(foodBlobCount + "\t");
+			testWriter.write(checkAnthill(rAntHillLocations,world) + "\t");
+			testWriter.write(checkAnthill(bAntHillLocations,world) + "\t");
+		} catch (IOException e) {
+		}
+
+		return rockCount == 14 && worldValid && checkAnthill(rAntHillLocations,world) && checkAnthill(bAntHillLocations,world) && foodBlobCount == 11;
 	}
 	
 	/**
@@ -278,16 +417,4 @@ public class Tournament {
 			return false;
 		}
 	}
-	
-	/**
-	 * bens code for setting all empty cells to empty, add into world
-	 */
-//	for (int i = 0; i < world.length; i++){                
-//		for(int j = 0; j < world.length; j++){
-//			Cell cell = world[i][j];
-//			cell.setEmpty(!(cell.getIsRock() || cell.getIsRAntHill() || cell.getIsBAntHill() || cell.getFoodAmount() > 0));
-//		}
-//	}
-				
-
 }
