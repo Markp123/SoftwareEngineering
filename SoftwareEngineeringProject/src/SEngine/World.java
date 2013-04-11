@@ -317,6 +317,7 @@ public class World {
 			if (rockSpaceClear)
 			{
 				world[randRow][randCol].setRock(true);
+				world[randRow][randCol].setEmpty(false);
 				made++;
 				rockSpaceClear = false;
 			}
@@ -332,14 +333,14 @@ public class World {
 			{
 				for(int i = 0; i < length; i++)
 				{
-					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsEmpty());
+					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsEmpty())
 					{
 						n++;
 					}
 				}
 				for(int j = 0; j < length; j++)
 				{
-					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsEmpty());
+					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsEmpty())
 					{
 						n++;
 					}
@@ -359,13 +360,9 @@ public class World {
 			}
 			else if (recursive == 8 && spaceClear == false)
 			{
-				n = 0;
-				recursive = 0;
-				count = 0;
-				temp = 0;
-				length = 15;
 				resetVariables();
 				checkRand();
+				checkSpaceClear(0,0,0,0,15);
 			}
 		}
 	}
