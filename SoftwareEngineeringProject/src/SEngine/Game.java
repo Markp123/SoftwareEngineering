@@ -7,14 +7,13 @@ import java.lang.Thread;
 public class Game {
 	private World world;
 	public Game(World world){
-		ArrayList<Instruction> brain1 = new BrainParser("src/cleverbrain1.brain").parseBrain();
-		ArrayList<Instruction> brain2 = new BrainParser("src/cleverbrain2.brain").parseBrain();
-		System.out.println(brain1.get(0).getClass().getName());
+		ArrayList<Instruction> brain1 = new BrainParser("src/cleverbrain3.brain").parseBrain();
+		ArrayList<Instruction> brain2 = new BrainParser("src/cleverbrain4.brain").parseBrain();
 		this.world = world;
 		int antR = 0;
 		int antB = 0;
-		for(int x = 0; x<150; x++){
-			for(int y = 0; y<150; y++){
+		for(int x = 0; x<world.getRows(); x++){
+			for(int y = 0; y<world.getColumns(); y++){
 				Cell c = world.getCell(x,y);
 				if(c.getIsRAntHill()){
 					c.setAnt(new Ant(Colour.RED, antR, brain1));
@@ -36,8 +35,8 @@ public class Game {
 	public void stats(){
 		int rAntsFood = 0;
 		int bAntsFood = 0;
-		for(int x = 0; x<150; x++){
-			for(int y = 0; y<150; y++){
+		for(int x = 0; x<world.getRows(); x++){
+			for(int y = 0; y<world.getColumns(); y++){
 				Cell c = world.getCell(x,y);
 				if(c.getIsRAntHill()){
 					rAntsFood += c.getFoodAmount();
@@ -67,8 +66,8 @@ public class Game {
 		boolean found = false;
 		int x = 0;
 		int y = 0;
-		while(x < 150 && !found){
-			while(y < 150 && !found){
+		while(x < world.getRows() && !found){
+			while(y < world.getColumns() && !found){
 				Cell c = world.getCell(x,y);
 				if(c.isAnt()){
 					if(c.getAnt().getId()==id && c.getAnt().getColour()==col){
@@ -95,8 +94,8 @@ public class Game {
 			boolean found = false;
 			int x = 0;
 			int y = 0;
-			while(x < 150 && !found){
-				while(y < 150 && !found){
+			while(x < world.getRows() && !found){
+				while(y < world.getColumns() && !found){
 					p[0] = x;
 					p[1] = y;
 					Cell c = world.getCell(p[0],p[1]);
@@ -230,9 +229,11 @@ public class Game {
     private int adjacent_ants(int[] p, Colour c){
     	int antNum = 0;
     	for (int d = 0; d <= 5; d++){
-	    	if(world.getCell(adjacent_cell(p,d)[0],adjacent_cell(p,d)[1]).getAnt().getColour()==other_color(c)){
-	    		antNum++;
-	    	}
+    		if(world.getCell(adjacent_cell(p,d)[0],adjacent_cell(p,d)[1]).isAnt()){
+		    	if(world.getCell(adjacent_cell(p,d)[0],adjacent_cell(p,d)[1]).getAnt().getColour()==other_color(c)){
+		    		antNum++;
+		    	}
+    		}
 	    }
     	return antNum;
     }
@@ -285,7 +286,7 @@ public class Game {
     	Ant a;
     	if (some_ant_is_at(p)){
     		a = ant_at(p);
-    		if (adjacent_ants(p, other_color(a.getColour())) >= 5) {
+    		if (adjacent_ants(p, a.getColour()) >= 5) {
             	clear_ant_at(p);// need to check if method kills the ant
             	int i = 0;
             	if(a.isHas_food()){
@@ -304,7 +305,11 @@ public class Game {
     private void check_for_surrounded_ants(int[] p){
     	check_for_surrounded_ant_at(p);
 	    for (int d = 0; d <= 5; d++){
-	    	check_for_surrounded_ant_at(adjacent_cell(p,d));
+	    	if(adjacent_cell(p,d)[0]>=0 && adjacent_cell(p,d)[0] < world.getRows() && adjacent_cell(p,d)[1]>=0 && adjacent_cell(p,d)[1] < world.getColumns()){
+		    	if(world.getCell(adjacent_cell(p,d)[0],adjacent_cell(p,d)[1]).isAnt()){
+		    		check_for_surrounded_ant_at(adjacent_cell(p,d));
+		    	}
+	    	}
 	    }
     }
 	
@@ -323,29 +328,39 @@ public class Game {
 	    else{
 	    	Instruction instr = a.getInstruction();
 	    	String name = instr.getClass().getName();
-	    	if(name.equals("Sense")){
+	    	if(name.equals("SEngine.Sense")){
 	    		Sense instr2 = (Sense)a.getInstruction();
 	    		int[] p2 = sensed_cell(p, a.getDirection(), instr2.getDirection());
 		        int st;
-		        if(cell_matches(p2, instr2.getCondition(), a.getColour())){
-		        	st = instr2.getState1();
-		      	}
+		        if(instr2.getCondition()==Condition.MARKER){//if it's a marker condition
+		        	if(cell_matches(p2, instr2.getMarker(), a.getColour())){
+			        	st = instr2.getState1();
+			      	}
+			        else{
+			        	st = instr2.getState2();
+			        }
+		        }
 		        else{
-		        	st = instr2.getState2();
+			        if(cell_matches(p2, instr2.getCondition(), a.getColour())){
+			        	st = instr2.getState1();
+			      	}
+			        else{
+			        	st = instr2.getState2();
+			        }
 		        }
 		        a.setState(st);
 	    	}
-	    	else if(name.equals("Mark")){
+	    	else if(name.equals("SEngine.Mark")){
 	    		Mark instr2 = (Mark)a.getInstruction();
 	    		set_marker_at(p, a.getColour(), instr2.getMarker());
 	        	a.setState(instr2.getState());
 	    	}
-	    	else if(name.equals("Unmark")){
+	    	else if(name.equals("SEngine.Unmark")){
 	    		Unmark instr2 = (Unmark)a.getInstruction();
 	    		clear_marker_at(p, a.getColour(), instr2.getMarker());
 	        	a.setState(instr2.getState());
 	    	}
-	    	else if(name.equals("PickUp")){
+	    	else if(name.equals("SEngine.PickUp")){
 	    		PickUp instr2 = (PickUp)a.getInstruction();
 	    		if(a.isHas_food() || food_at(p) == 0){
 	        		a.setState(instr2.getState2());
@@ -356,7 +371,7 @@ public class Game {
 	            	a.setState(instr2.getState1());
 	        	}
 	    	}
-	    	else if(name.equals("Drop")){
+	    	else if(name.equals("SEngine.Drop")){
 	    		Drop instr2 = (Drop)a.getInstruction();
 	    		 if(a.isHas_food()){
 				        set_food_at(p, food_at(p) + 1);
@@ -364,12 +379,12 @@ public class Game {
 				        a.setState(instr2.getState());
 			        }
 	    	}
-	    	else if(name.equals("Turn")){
+	    	else if(name.equals("SEngine.Turn")){
 	    		Turn instr2 = (Turn)a.getInstruction();
 	    		a.setDirection(Turn(instr2.getDirection(), a.getDirection()));
 	        	a.setState(instr2.getState());
 	    	}
-	    	else if(name.equals("Move")){
+	    	else if(name.equals("SEngine.Move")){
 	    		Move instr2 = (Move)a.getInstruction();
 	    		int[] newp = adjacent_cell(p, a.getDirection());
 		        if(rocky(newp) || some_ant_is_at(newp)){
@@ -383,7 +398,7 @@ public class Game {
 		            check_for_surrounded_ants(newp);
 		        }
 	    	}
-	    	else if(name.equals("Flip")){
+	    	else if(name.equals("SEngine.Flip")){
 	    		Flip instr2 = (Flip)a.getInstruction();
 	    		int st;
 		        if(randomint(instr2.getP()) == 0){
@@ -408,18 +423,39 @@ public class Game {
      */
 	private boolean cell_matches(int[] p, Condition condition, Colour colour) {
 		boolean bool = false;
+		//System.out.println(p[0] + " " + p[1]);
 		switch(condition){
 		case FRIEND:
-			bool = (world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			if(world.getCell(p[0],p[1]).isAnt()){
+				bool = (world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			}
+			else{
+				bool = false;
+			}
 			break;
 		case FOE:
-			bool = (world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			if(world.getCell(p[0],p[1]).isAnt()){
+				bool = (world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			}
+			else{
+				bool = false;
+			}
 			break;
 		case FRIENDWITHFOOD:
-			bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			if(world.getCell(p[0],p[1]).isAnt()){
+				bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == colour);
+			}
+			else{
+				bool = false;
+			}
 			break;
 		case FOEWITHFOOD:
-			bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			if(world.getCell(p[0],p[1]).isAnt()){
+				bool = (world.getCell(p[0],p[1]).getAnt().isHas_food() && world.getCell(p[0],p[1]).getAnt().getColour() == other_color(colour));
+			}
+			else{
+				bool = false;
+			}
 			break;
 		case FOOD:
 			bool = world.getCell(p[0],p[1]).getIsFood();
@@ -427,11 +463,8 @@ public class Game {
 		case ROCK:
 			bool = world.getCell(p[0],p[1]).getIsRock();
 			break;
-		case MARKER:
-			bool = false; //marker not implemented yet
-			break;
 		case FOEMARKER:
-			bool = false; //marker not implemented yet
+			bool = check_any_marker_at(p, other_color(colour));
 			break;
 		case HOME:
 			if(colour==Colour.RED){
@@ -449,10 +482,41 @@ public class Game {
 				bool = world.getCell(p[0],p[1]).getIsBAntHill();
 			}
 			break;
+		case MARKER://should never be called because a check statement is run before this function does
+			break;
+		}
+		return bool;
+	}
+
+	private boolean check_any_marker_at(int[] pos, Colour colour){
+		boolean bool = false;
+		int i = 0;
+		Cell c = world.getCell(pos[0],pos[1]);
+		if (colour==Colour.RED){
+			while(bool && i <6){
+				bool = c.getRMarker()[i];
+				i++;
+			}
+		}
+		else{
+			while(bool && i <6){
+				bool = c.getRMarker()[i];
+				i++;
+			}
 		}
 		return bool;
 	}
 	
+	private boolean cell_matches(int[] p, int marker, Colour colour){
+		Boolean bool;
+		if (colour == Colour.RED){
+			bool = world.getCell(p[0], p[1]).getRMarker()[marker];
+		}
+		else{
+			bool = world.getCell(p[0], p[1]).getBMarker()[marker];
+		}
+		return bool;
+	}
     /**
      * returns the cell to be seensed after being given the direction attributes
      * 
@@ -483,7 +547,8 @@ public class Game {
      * @param int direction the direction to face
      * @return p int[] the new amended cell position
      */
-	private int[] adjacent_cell(int[] p, int direction){
+	private int[] adjacent_cell(int[] newp, int direction){
+		int[] p = newp.clone();
 	    switch(direction){
 		    case 0: p[0]+=1;
 		     break;
@@ -537,19 +602,22 @@ public class Game {
 		WorldModel model = new WorldModel(world);
 		
 		for(int rounds=0; rounds<300000; rounds++){
-			for(int i = 0; i<91; i++){//91 ants per team in the game?
+			for(int i = 0; i<127; i++){//127 ants per team in the game
 			step(i, Colour.RED);
 			step(i, Colour.BLACK);
 			i++;
 			}
 			try{
-				Thread.sleep(1000);//sleep for 1000ms
+				Thread.sleep(0);//sleep for 1000ms
 			}
 			catch(Exception e){
 				//If thread interrupted by another thread
 			}
-			model.printWorld();
 			//refresh/update representation here
+			if(rounds%500==0){
+				model.printWorld();
+			}
 		}
+		model.printWorld();
 	}
 }

@@ -9,6 +9,21 @@ public class Cell extends JButton {
 	private boolean isFood = false;
 	private boolean isRock = false;
 	private boolean isRAntHill = false; 
+	public boolean[] getBMarker() {
+		return BMarker;
+	}
+
+	public void setBMarker(boolean[] bMarker) {
+		BMarker = bMarker;
+	}
+
+	public boolean[] getRMarker() {
+		return RMarker;
+	}
+
+	public void setRMarker(boolean[] rMarker) {
+		RMarker = rMarker;
+	}
 	private boolean isBAntHill = false; 
 	private boolean isEmpty = false;
 	private boolean isAntHill = false;
