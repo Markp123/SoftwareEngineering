@@ -3,6 +3,15 @@ package SEngine;
 import java.io.*;
 import java.util.Random;
 
+/**
+* Software Engineering Project 2013
+* 
+* World class. This class generates random worlds. 
+* 
+* It can also write worlds to a seperate file
+* 
+* @author (valiANT)
+*/
 public class World {
 	private Cell[][] world;
 	private Random random;
@@ -11,6 +20,12 @@ public class World {
 	private int generatedWorldNo;
 	private BufferedWriter worldWriter;
 
+	/**
+	 * Constructor creates new world using parameters
+	 * 
+	 * @param row - The amount of rows that the world has
+	 * @param column - The amount of columns that the world has
+	 */
 	public World(int row, int column)
 	{
 		generatedWorldNo = 0;
@@ -148,6 +163,9 @@ public class World {
 		}
 	}
 
+	/**
+	 * Checks to see if the random row and column variables will allow a rock to fit within the world
+	 */
 	public void rockCheck()
 	{
 		if (randRow > 3 && randRow < world.length -3)
@@ -195,6 +213,10 @@ public class World {
 		}
 	}
 
+	/**
+	 * Checks to see if the random row and column variables will allow an ant hill or food blob
+	 * to fit within the world
+	 */
 	public void checkRand()
 	{
 		if (randRow > 8 && randRow < world.length -14)
@@ -241,7 +263,10 @@ public class World {
 			}
 		}
 	}
-
+	
+	/**
+	 * Resets the variables, ready for the next world aspect to be created
+	 */
 	public void resetVariables()
 	{
 		randRow = random.nextInt(world.length);
@@ -252,6 +277,9 @@ public class World {
 		checkRand();
 	}
 
+	/**
+	 * Resets the variables, ready for the next food blob to be created
+	 */
 	public void resetFood()
 	{
 		randRow = random.nextInt(world.length);
@@ -262,21 +290,41 @@ public class World {
 		checkRand();
 	}
 
+	/**
+	 * Returns the cell in the positions designated by the input parameters
+	 * 
+	 * @param row - The row within the world
+	 * @param column - The column within the world
+	 * @return Cell - The Cell at the position stated by the parameters
+	 */
 	public Cell getCell(int row, int column)
 	{
 		return world[row][column];
 	}
 
+	/**
+	 * Returns the amount of rows in the world
+	 * @return - the amount of rows in the world
+	 */
 	public int getRows()
 	{
 		return rows;
 	}
 
+	/**
+	 * Returns the amount of columns in the world
+	 * @return - the amount of columns in the world
+	 */
 	public int getColumns()
 	{
 		return columns;
 	}
 
+	/**
+	 * Starts by filling in the edges of the world with rocks.
+	 * 
+	 * Proceeds to create 14 random rocks within the world.
+	 */
 	public void rocks()
 	{
 		for (int i = 0; i < world.length; i++)
@@ -325,6 +373,16 @@ public class World {
 		}
 	}
 
+	/**
+	 * Recursively checks the position specified by the random row and column to see if a ant hill 
+	 * will fit in. Finds a new place if the space is not sufficient.
+	 * 
+	 * @param n - Counts the free spaces, ant hills need 184 free spaces when counting the centre line twice
+	 * @param temp - adjusts the column position, due to the hexagonal nature of the world
+	 * @param count - counts the current row from centre 
+	 * @param recursive - amount of times this method is called
+	 * @param length - the length of the row being checked
+	 */
 	public void checkSpaceClear(int n, int temp, int count, int recursive, int length)
 	{
 		while (!spaceClear)
@@ -367,7 +425,14 @@ public class World {
 		}
 	}
 
-
+	/**
+	 * Recursively creates a red ant hill when there is a space clear.
+	 * 
+	 * @param temp - adjusts the column position, due to the hexagonal nature of the world
+	 * @param count - counts the current row from centre 
+	 * @param recursive - amount of times this method is called
+	 * @param length - the length of the row being checked
+	 */
 	public void redAntHill(int temp, int count, int recursive, int length)
 	{
 		while (recursive < 7)
@@ -402,6 +467,14 @@ public class World {
 		}
 	}
 
+	/**
+	 * Recursively creates a black ant hill when there is a space clear.
+	 * 
+	 * @param temp - adjusts the column position, due to the hexagonal nature of the world
+	 * @param count - counts the current row from centre 
+	 * @param recursive - amount of times this method is called
+	 * @param length - the length of the row being checked
+	 */
 	public void blackAntHill(int temp, int count, int recursive, int length)
 	{
 		while (recursive < 7)
@@ -437,6 +510,14 @@ public class World {
 		}
 	}
 
+	/**
+	 * Akin to the findClearSpace() method. Searches for a clear space for a food blob to be implemented
+	 * 
+	 * @param n - Counts the free spaces, food blobs need 56 free spaces when counting the centre line twice
+	 * @param count - counts the current row from centre 
+	 * @param recursive - amount of times this method is called
+	 * @param length - the length of the row being checked
+	 */
 	public void findClearFoodSpace(int n, int count, int recursive, int length)
 	{
 		while (!foodSpaceClear)
@@ -475,12 +556,26 @@ public class World {
 		}
 	}
 
+	/**
+	 * Main method
+	 * 
+	 * Creates new world then writes world to file
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		//World wd = new World("C:/Users/David/Desktop/sample0.world");
 		World wd = new World(150,150);
 		wd.writeWorld();
 	}
 
+	/**
+	 * Creates a food blob when there is a space clear big enough for a food blob
+	 * 
+	 * @param count - counts the current row from centre 
+	 * @param recursive - amount of times this method is called
+	 * @param length - the length of the row being checked
+	 */
 	public void food(int count, int recursive, int length)
 	{
 		while(recursive < 3)
