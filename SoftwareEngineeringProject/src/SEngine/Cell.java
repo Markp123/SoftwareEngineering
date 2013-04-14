@@ -4,6 +4,14 @@ package SEngine;
 import javax.swing.JButton;
 import java.awt.Dimension;
 
+/**
+ * Software Engineering Project 2013
+ * 
+ * The cell class holds the various states that a cell can be in. It contains various methods to edit the state of the cell.
+ * 
+ * @author Team valiANT
+ *
+ */
 public class Cell extends JButton {
 	private String image = ".";
 	private boolean isFood = false;
@@ -14,6 +22,9 @@ public class Cell extends JButton {
 	private boolean isAntHill = false;
 	private int foodAmount = 0;
 	public static int preferredWidth = 45;
+	private Ant ant;
+	private boolean[] BMarker;
+	private boolean[] RMarker;
 
 	public Cell() {
 		super();
@@ -21,8 +32,7 @@ public class Cell extends JButton {
 		this.setText(toString());
 	}        
 
-	public void updateTile()
-	{
+	public void updateTile() {
 		this.setText(toString());
 		image = "."; //Default Cell image (Empty Cell)
 		isFood = false;
@@ -37,13 +47,11 @@ public class Cell extends JButton {
 		ant = null;
 	}
 
-	public static int getPreferredWidth() 
-	{
+	public static int getPreferredWidth() {
 		return preferredWidth;
 	}
 
-	public void setFood(boolean isFood) 
-	{
+	public void setFood(boolean isFood) {
 		this.isFood = isFood;
 	}
 
@@ -63,8 +71,7 @@ public class Cell extends JButton {
 		return isBAntHill;
 	}
 
-	public boolean getIsAntHill()
-	{
+	public boolean getIsAntHill() {
 		return isAntHill;
 	}
 
@@ -76,83 +83,59 @@ public class Cell extends JButton {
 		return foodAmount;
 	}
 
-	public void setRock(boolean isRock) 
-	{
+	public void setRock(boolean isRock) {
 		this.isRock = isRock;
 	}
 
-	public void setRAntHill(boolean isRAntHill) 
-	{
+	public void setRAntHill(boolean isRAntHill) {
 		this.isRAntHill = isRAntHill;
 	}
 
-	public void setBAntHill(boolean isBAntHill) 
-	{
+	public void setBAntHill(boolean isBAntHill) {
 		this.isBAntHill = isBAntHill;
 	}
 
-	public void setIsAntHill(boolean isAntHill)
-	{
+	public void setIsAntHill(boolean isAntHill) {
 		this.isAntHill = isAntHill;
 	}
 
-	public void setEmpty(boolean isEmpty) 
-	{
+	public void setEmpty(boolean isEmpty) {
 		this.isEmpty = isEmpty;
 	}
 
-	public void setFoodAmount(int foodAmount)
-	{
+	public void setFoodAmount(int foodAmount) {
 		this.foodAmount = foodAmount;
 	}
 
-	public String getImage() 
-	{
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(String newImage)
-	{
+	public void setImage(String newImage) {
 		this.image = newImage;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		if(isAnt()){
-			if(getAnt().getColour()==Colour.RED){
+			if(getAnt().getColour()==Colour.RED) {
 				image = "£";
-			}
-			else{
+			} else {
 				image = "$";
 			}
-		}
-		else if(isRock)
-		{
+		} else if(isRock) {
 			image = "#";
-		}
-		else if (isFood)
-		{
+		} else if (isFood) {
 			image = String.valueOf(foodAmount);
-		}
-		else if (isRAntHill)
-		{
+		} else if (isRAntHill) {
 			image = "+";
-		}
-		else if (isBAntHill)
-		{
+		} else if (isBAntHill) {
 			image = "B";
-		}
-		else if (isEmpty)
-		{
+		} else if (isEmpty) {
 			image = ".";
 		}
 		return image;
-
 	}
-	private Ant ant;
-	private boolean[] BMarker;
-	private boolean[] RMarker;
-
+	
 	public Ant getAnt() {
 		return ant;
 	}

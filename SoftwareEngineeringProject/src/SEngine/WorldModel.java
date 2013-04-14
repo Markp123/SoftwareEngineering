@@ -1,4 +1,13 @@
 package SEngine;
+
+/**
+ * Software Engineering Project 2013
+ * 
+ * This is the world model class. Its primary job is to print out a representation of the world.
+ *  
+ * @author Team valiANT
+ *
+ */
 public class WorldModel {
 
 	private World world;

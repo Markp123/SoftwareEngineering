@@ -26,8 +26,7 @@ public class World {
 	 * @param row - The amount of rows that the world has
 	 * @param column - The amount of columns that the world has
 	 */
-	public World(int row, int column)
-	{
+	public World(int row, int column) {
 		generatedWorldNo = 0;
 		random = new Random();
 		world = new Cell[row][column];
@@ -38,10 +37,8 @@ public class World {
 		randRowCorrect = false;
 		randColCorrect = false;
 		spaceClear = false;
-		for (int i = 0; i < world.length; i++)
-		{
-			for(int j = 0; j < world.length; j++)
-			{
+		for (int i = 0; i < world.length; i++){
+			for(int j = 0; j < world.length; j++){
 				Cell cell = new Cell();
 				world[i][j] = cell;
 			}
@@ -65,8 +62,7 @@ public class World {
 		checkSpaceClear(0,0,0,0,15);
 		blackAntHill(0,0,0,13);
 		spaceClear = false;
-		while(made<11)
-		{
+		while(made<11) {
 			findClearFoodSpace(0, 0, 0, 7);
 			food(0, 0, 5);
 			foodSpaceClear = false;
@@ -166,46 +162,30 @@ public class World {
 	/**
 	 * Checks to see if the random row and column variables will allow a rock to fit within the world
 	 */
-	public void rockCheck()
-	{
-		if (randRow > 3 && randRow < world.length -3)
-		{
+	public void rockCheck() {
+		if (randRow > 3 && randRow < world.length -3){
 			randRowCorrect = true;
-		}
-		else
-		{
+		} else {
 			randRowCorrect = false;
 		}
-		if (randCol > 3 && randCol < world.length-3)
-		{
+		
+		if (randCol > 3 && randCol < world.length-3) {
 			randColCorrect = true;
-		}
-		else
-		{
+		} else {
 			randColCorrect = false;
 		}
-		while (!randRowCorrect || !randColCorrect)
-		{
-			if (!randRowCorrect)
-			{
-				if (randRow > 3 && randRow < world.length -3)
-				{
+		while (!randRowCorrect || !randColCorrect) {
+			if (!randRowCorrect) {
+				if (randRow > 3 && randRow < world.length -3) {
 					randRowCorrect = true;
-				}
-				else
-				{
+				} else {
 					randRowCorrect = false;
 					randRow = random.nextInt(world.length);
 				}
-			}
-			else if (!randColCorrect)
-			{
-				if (randCol > 3 && randCol < world.length-3)
-				{
+			} else if (!randColCorrect) {
+				if (randCol > 3 && randCol < world.length-3) {
 					randColCorrect = true;
-				}
-				else
-				{
+				} else {
 					randColCorrect = false;
 					randCol = random.nextInt(world.length);
 				}
@@ -217,46 +197,29 @@ public class World {
 	 * Checks to see if the random row and column variables will allow an ant hill or food blob
 	 * to fit within the world
 	 */
-	public void checkRand()
-	{
-		if (randRow > 8 && randRow < world.length -14)
-		{
+	public void checkRand() {
+		if (randRow > 8 && randRow < world.length -14) {
 			randRowCorrect = true;
-		}
-		else
-		{
+		} else {
 			randRowCorrect = false;
 		}
-		if (randCol > 7 && randCol < world.length-14)
-		{
+		if (randCol > 7 && randCol < world.length-14) {
 			randColCorrect = true;
-		}
-		else
-		{
+		} else {
 			randColCorrect = false;
 		}
-		while (!randRowCorrect || !randColCorrect)
-		{
-			if (!randRowCorrect)
-			{
-				if (randRow > 8 && randRow < world.length -14)
-				{
+		while (!randRowCorrect || !randColCorrect) {
+			if (!randRowCorrect) {
+				if (randRow > 8 && randRow < world.length -14) {
 					randRowCorrect = true;
-				}
-				else
-				{
+				} else {
 					randRowCorrect = false;
 					randRow = random.nextInt(world.length);
 				}
-			}
-			else if (!randColCorrect)
-			{
-				if (randCol > 7 && randCol < world.length-14)
-				{
+			} else if (!randColCorrect) {
+				if (randCol > 7 && randCol < world.length-14) {
 					randColCorrect = true;
-				}
-				else
-				{
+				} else {
 					randColCorrect = false;
 					randCol = random.nextInt(world.length);
 				}
@@ -267,8 +230,7 @@ public class World {
 	/**
 	 * Resets the variables, ready for the next world aspect to be created
 	 */
-	public void resetVariables()
-	{
+	public void resetVariables() {
 		randRow = random.nextInt(world.length);
 		randCol = random.nextInt(world.length);
 		randRowCorrect = false;
@@ -280,8 +242,7 @@ public class World {
 	/**
 	 * Resets the variables, ready for the next food blob to be created
 	 */
-	public void resetFood()
-	{
+	public void resetFood() {
 		randRow = random.nextInt(world.length);
 		randCol = random.nextInt(world.length);
 		randRowCorrect = false;
@@ -297,8 +258,7 @@ public class World {
 	 * @param column - The column within the world
 	 * @return Cell - The Cell at the position stated by the parameters
 	 */
-	public Cell getCell(int row, int column)
-	{
+	public Cell getCell(int row, int column) {
 		return world[row][column];
 	}
 
@@ -306,8 +266,7 @@ public class World {
 	 * Returns the amount of rows in the world
 	 * @return - the amount of rows in the world
 	 */
-	public int getRows()
-	{
+	public int getRows() {
 		return rows;
 	}
 
@@ -315,8 +274,7 @@ public class World {
 	 * Returns the amount of columns in the world
 	 * @return - the amount of columns in the world
 	 */
-	public int getColumns()
-	{
+	public int getColumns() {
 		return columns;
 	}
 
@@ -325,10 +283,8 @@ public class World {
 	 * 
 	 * Proceeds to create 14 random rocks within the world.
 	 */
-	public void rocks()
-	{
-		for (int i = 0; i < world.length; i++)
-		{
+	public void rocks() {
+		for (int i = 0; i < world.length; i++) {
 			world[0][i].setRock(true);
 			world[i][0].setRock(true);
 			world[i][world.length-1].setRock(true);
@@ -337,33 +293,23 @@ public class World {
 		int made = 0;
 		int n =0;
 		boolean rockSpaceClear = false;
-		while (made < 14)
-		{
+		while (made < 14) {
 			randRow = random.nextInt(world.length);
 			randCol = random.nextInt(world.length);
 			rockCheck();
-			for (int i = randRow - 1; i <= randRow + 1; i++)
-			{
-				for (int j = randCol - 1; j <= randCol + 1; j++)
-				{
-					if ((world[i][j].getIsRock() == false && (i == 0 && j == 0) == false))
-					{
-						if (!(world[i][j].getIsAntHill()) && !(world[i][j].getIsFood()))
-						{
-							{
-								n++;
-							}
+			for (int i = randRow - 1; i <= randRow + 1; i++) {
+				for (int j = randCol - 1; j <= randCol + 1; j++) {
+					if ((world[i][j].getIsRock() == false && (i == 0 && j == 0) == false)) {
+						if (!(world[i][j].getIsAntHill()) && !(world[i][j].getIsFood())) {
+							n++;
 						}
 					}
-					if (n == 9)
-					{
+					if (n == 9) {
 						rockSpaceClear = true;
 					}
-
 				}
 			}
-			if (rockSpaceClear)
-			{
+			if (rockSpaceClear) {
 				world[randRow][randCol].setRock(true);
 				world[randRow][randCol].setEmpty(false);
 				made++;
@@ -383,28 +329,20 @@ public class World {
 	 * @param recursive - amount of times this method is called
 	 * @param length - the length of the row being checked
 	 */
-	public void checkSpaceClear(int n, int temp, int count, int recursive, int length)
-	{
-		while (!spaceClear)
-		{
-			if (recursive <8)
-			{
-				for(int i = 0; i < length; i++)
-				{
-					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsEmpty())
-					{
+	public void checkSpaceClear(int n, int temp, int count, int recursive, int length) {
+		while (!spaceClear) {
+			if (recursive <8) {
+				for(int i = 0; i < length; i++) {
+					if (getCell(randRow + count,((i+randCol)+temp)-1).getIsEmpty()) {
 						n++;
 					}
 				}
-				for(int j = 0; j < length; j++)
-				{
-					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsEmpty())
-					{
+				for(int j = 0; j < length; j++) {
+					if (getCell(randRow - count,((j+randCol)+temp)-1).getIsEmpty()) {
 						n++;
 					}
 				}
-				if ((randRow + count) % 2 != 0)
-				{
+				if ((randRow + count) % 2 != 0) {
 					temp++;
 				}
 				count++;
@@ -412,12 +350,9 @@ public class World {
 				recursive++;
 				checkSpaceClear(n, temp, count, recursive, length);
 			}
-			if (n == 184)
-			{
+			if (n == 184) {
 				spaceClear = true;
-			}
-			else if (recursive == 8 && spaceClear == false)
-			{
+			} else if (recursive == 8 && spaceClear == false) {
 				resetVariables();
 				checkRand();
 				checkSpaceClear(0,0,0,0,15);
@@ -433,30 +368,21 @@ public class World {
 	 * @param recursive - amount of times this method is called
 	 * @param length - the length of the row being checked
 	 */
-	public void redAntHill(int temp, int count, int recursive, int length)
-	{
-		while (recursive < 7)
-		{
-			if (spaceClear)
-			{
-				for(int i = 0; i < length; i++)
-				{
-					{
+	public void redAntHill(int temp, int count, int recursive, int length) {
+		while (recursive < 7) {
+			if (spaceClear) {
+				for(int i = 0; i < length; i++) {
 						world[randRow+count][(i+randCol)+temp].setRAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setEmpty(false);
-					}
+					
 				}
-				for(int j = 0; j < length; j++)
-				{
-					{
+				for(int j = 0; j < length; j++){
 						world[randRow-count][(j+randCol)+temp].setRAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setEmpty(false);
-					}
 				}
-				if ((randRow + count) % 2 != 0)
-				{
+				if ((randRow + count) % 2 != 0) {
 					temp++;
 				}
 				count++;
@@ -475,31 +401,20 @@ public class World {
 	 * @param recursive - amount of times this method is called
 	 * @param length - the length of the row being checked
 	 */
-	public void blackAntHill(int temp, int count, int recursive, int length)
-	{
-		while (recursive < 7)
-		{
-			if (spaceClear)
-			{
-				for(int i = 0; i < length; i++)
-				{
-					{
+	public void blackAntHill(int temp, int count, int recursive, int length) {
+		while (recursive < 7) {
+			if (spaceClear) {
+				for(int i = 0; i < length; i++) {
 						world[randRow+count][(i+randCol)+temp].setBAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setIsAntHill(true);
 						world[randRow+count][(i+randCol)+temp].setEmpty(false);
-
-					}
 				}
-				for(int j = 0; j < length; j++)
-				{
-					{
+				for(int j = 0; j < length; j++) {
 						world[randRow-count][(j+randCol)+temp].setBAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setIsAntHill(true);
 						world[randRow-count][(j+randCol)+temp].setEmpty(false);
-					}
 				}
-				if ((randRow + count) % 2 != 0)
-				{
+				if ((randRow + count) % 2 != 0) {
 					temp++;
 				}
 				count++;
@@ -518,23 +433,16 @@ public class World {
 	 * @param recursive - amount of times this method is called
 	 * @param length - the length of the row being checked
 	 */
-	public void findClearFoodSpace(int n, int count, int recursive, int length)
-	{
-		while (!foodSpaceClear)
-		{
-			if (recursive < 4)
-			{
-				for(int i = 0; i < length; i++)
-				{
-					if (getCell(randRow+count,(i+randCol)-1).getIsEmpty())
-					{
+	public void findClearFoodSpace(int n, int count, int recursive, int length) {
+		while (!foodSpaceClear) {
+			if (recursive < 4) {
+				for(int i = 0; i < length; i++) {
+					if (getCell(randRow+count,(i+randCol)-1).getIsEmpty()) {
 						n++;
 					}
 				}
-				for(int j = 0; j < length; j++)
-				{
-					if (getCell(randRow-count,(j+randCol)-1).getIsEmpty())
-					{
+				for(int j = 0; j < length; j++) {
+					if (getCell(randRow-count,(j+randCol)-1).getIsEmpty()) {
 						n++;
 					}
 				}
@@ -542,16 +450,13 @@ public class World {
 				recursive++;
 				findClearFoodSpace(n, count, recursive, length);
 			}
-			if (n == 56)
-			{
+			if (n == 56) {
 				foodSpaceClear = true;
 			}
-			else if (recursive == 4 && foodSpaceClear == false)
-			{
+			else if (recursive == 4 && foodSpaceClear == false) {
 				resetFood();
 				checkRand();
 				findClearFoodSpace(0,0,0,7);
-
 			}
 		}
 	}
@@ -576,27 +481,18 @@ public class World {
 	 * @param recursive - amount of times this method is called
 	 * @param length - the length of the row being checked
 	 */
-	public void food(int count, int recursive, int length)
-	{
-		while(recursive < 3)
-		{
-			if(foodSpaceClear == true)
-			{
-				for(int i = 0; i < length; i++)
-				{
-					{
-						world[randRow+count][i+randCol].setFood(true);
-						world[randRow+count][i+randCol].setFoodAmount(5);
+	public void food(int count, int recursive, int length) {
+		while(recursive < 3) {
+			if(foodSpaceClear == true) {
+				for(int i = 0; i < length; i++) {
+						world[randRow+count][i+randCol].setFood(true);		//Creates the line in the centre and the lines
+						world[randRow+count][i+randCol].setFoodAmount(5);	//above the centre of the food blob
 						world[randRow+count][i+randCol].setEmpty(false);
-					}
 				}
-				for(int j = 0; j < length; j++)
-				{
-					{
-						world[randRow-count][j+randCol].setFood(true);
-						world[randRow-count][j+randCol].setFoodAmount(5);
+				for(int j = 0; j < length; j++) {
+						world[randRow-count][j+randCol].setFood(true);		//Creates the line in the centre and the lines
+						world[randRow-count][j+randCol].setFoodAmount(5);	//below the centre of the food blob
 						world[randRow-count][j+randCol].setEmpty(false);
-					}
 				}
 				recursive++;
 				count++;
@@ -604,6 +500,4 @@ public class World {
 			}
 		}
 	}
-
-
 }
