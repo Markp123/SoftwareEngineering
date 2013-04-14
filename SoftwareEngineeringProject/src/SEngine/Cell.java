@@ -1,8 +1,7 @@
 package SEngine;
 
 
-import javax.swing.JButton;
-import java.awt.Dimension;
+import javax.swing.JLabel;
 
 /**
  * Software Engineering Project 2013
@@ -12,7 +11,7 @@ import java.awt.Dimension;
  * @author Team valiANT
  *
  */
-public class Cell extends JButton {
+public class Cell{
 	private String image = ".";
 	private boolean isFood = false;
 	private boolean isRock = false;
@@ -21,19 +20,14 @@ public class Cell extends JButton {
 	private boolean isEmpty = false;
 	private boolean isAntHill = false;
 	private int foodAmount = 0;
-	public static int preferredWidth = 45;
 	private Ant ant;
 	private boolean[] BMarker;
 	private boolean[] RMarker;
 
 	public Cell() {
-		super();
-		this.setPreferredSize(new Dimension(preferredWidth, preferredWidth));
-		this.setText(toString());
 	}        
 
 	public void updateTile() {
-		this.setText(toString());
 		image = "."; //Default Cell image (Empty Cell)
 		isFood = false;
 		isRock = false;
@@ -45,10 +39,6 @@ public class Cell extends JButton {
 		BMarker = new boolean[6];
 		RMarker = new boolean[6];
 		ant = null;
-	}
-
-	public static int getPreferredWidth() {
-		return preferredWidth;
 	}
 
 	public void setFood(boolean isFood) {
