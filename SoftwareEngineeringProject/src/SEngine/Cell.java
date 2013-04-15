@@ -1,4 +1,8 @@
 package SEngine;
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/Ben
 
 
 import javax.swing.JLabel;
@@ -25,17 +29,20 @@ public class Cell{
 	private boolean[] RMarker;
 
 	public Cell() {
+		BMarker = new boolean[6];
+		RMarker = new boolean[6];
+		ant = null;
 	}        
 
-	public void updateTile() {
+	public void updateTile()
+	{
 		image = "."; //Default Cell image (Empty Cell)
 		isFood = false;
 		isRock = false;
 		isRAntHill = false;
 		isBAntHill = false;
 		isEmpty = false;
-		foodAmount = 0;
-		
+		foodAmount = 0;		
 		BMarker = new boolean[6];
 		RMarker = new boolean[6];
 		ant = null;
@@ -113,6 +120,20 @@ public class Cell{
 				image = "$";
 			}
 		} else if(isRock) {
+=======
+	public String toString()
+	{
+		if(isAnt()){
+			if(getAnt().getColour()==Colour.RED){
+				image = "£";
+			}
+			else{
+				image = "$";
+			}
+		}
+		else if(isRock)
+		{
+>>>>>>> refs/heads/Ben
 			image = "#";
 		} else if (isFood) {
 			image = String.valueOf(foodAmount);
@@ -124,8 +145,17 @@ public class Cell{
 			image = ".";
 		}
 		return image;
+<<<<<<< HEAD
 	}
 	
+=======
+
+	}
+	private Ant ant;
+	private boolean[] BMarker;
+	private boolean[] RMarker;
+
+>>>>>>> refs/heads/Ben
 	public Ant getAnt() {
 		return ant;
 	}
@@ -145,11 +175,26 @@ public class Cell{
 		BMarker[bMarker] = false;
 	}
 
+	public boolean[] getBMarker() {
+		return BMarker;
+	}
+
+	public void setBMarker(boolean[] bMarker) {
+		BMarker = bMarker;
+	}
+
+	public boolean[] getRMarker() {
+		return RMarker;
+	}
+
+	public void setRMarker(boolean[] rMarker) {
+		RMarker = rMarker;
+	}
+
 	public void setRMarker(int rMarker) {
 		RMarker[rMarker] = true;
 	}
 	public void removeRMarker(int rMarker) {
 		RMarker[rMarker] = false;
 	}
-	
 }
