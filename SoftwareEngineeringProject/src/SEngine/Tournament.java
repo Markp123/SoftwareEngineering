@@ -29,14 +29,15 @@ public class Tournament {
 	}
 	
 
+	/**
+	 * Constructor for the tournament class.
+	 */
 	public Tournament(){
-		this.test();
-		
-
-		
-		
-//		setupTournament();
-//		System.out.println(holdTournament());
+		//String s = "TestWorlds/test42.world";
+		//System.out.println(determineWhetherContestWorldValid(new World(s)));
+		//this.test();
+		setupTournament();
+		System.out.println(holdTournament());
 	}
 	
 	/**
@@ -44,7 +45,7 @@ public class Tournament {
 	 */
 	private void test(){
 		try {
-			testWriter = new BufferedWriter(new FileWriter("Testing.xls"));
+			testWriter = new BufferedWriter(new FileWriter("Testing2.xls"));
 			testWriter.write("\tWorld 150 by 150\tBoarders rocky\tEdge free of elements\tRock Count\tFood blob count\tRed anthill valid\tBlack anthill valid\tWorld valid overall\n");
 			
 			for (int i = 1; i <= 55; i++){
@@ -94,7 +95,7 @@ public class Tournament {
 	 * @return winning brain
 	 */
 	private BrainParser holdTournament(){
-		for (World w : worldsInTournament){
+		for (World theWorld : worldsInTournament){
 			for (int i = 0; i < brainsInTournament.size(); i++){
 				BrainParser b1 = brainsInTournament.get(i);
 
@@ -102,30 +103,30 @@ public class Tournament {
 					BrainParser b2 = brainsInTournament.get(j);
 					if (b1 != b2){ 
 
-//						Game game1 = new Game(b1,b2, theWorld);
-//						String winner = game1.stats();
-//						if (winner.equals("red")){
-//							brainScores.put(b1,brainScores.get(b1) + 2);
-//						} else if (winner.equals("black")){
-//							brainScores.put(b2,brainScores.get(b2) + 2);
-//						} else {
-//							brainScores.put(b1,brainScores.get(b1) + 1);
-//							brainScores.put(b2,brainScores.get(b2) + 1);
-//						}
+						Game game1 = new Game(theWorld, b1,b2);
+						String winner1 = game1.stats();
+						if (winner1.equals("red")){
+							brainScores.put(b1,brainScores.get(b1) + 2);
+						} else if (winner1.equals("black")){
+							brainScores.put(b2,brainScores.get(b2) + 2);
+						} else {
+							brainScores.put(b1,brainScores.get(b1) + 1);
+							brainScores.put(b2,brainScores.get(b2) + 1);
+						}
 
 						/**
 						 * Swap colours
 						 */
-//						Game game2 = new Game(b2,b1, theWorld);
-//						String winner = game1.stats();
-//						if (winner.equals("red")){
-//							brainScores.put(b2,brainScores.get(b1) + 2);
-//						} else if (winner.equals("black")){
-//							brainScores.put(b1,brainScores.get(b2) + 2);
-//						} else {
-//							brainScores.put(b1,brainScores.get(b1) + 1);
-//							brainScores.put(b2,brainScores.get(b2) + 1);
-//						}
+						Game game2 = new Game(theWorld, b2,b1);
+						String winner2 = game2.stats();
+						if (winner2.equals("red")){
+							brainScores.put(b2,brainScores.get(b1) + 2);
+						} else if (winner2.equals("black")){
+							brainScores.put(b1,brainScores.get(b2) + 2);
+						} else {
+							brainScores.put(b1,brainScores.get(b1) + 1);
+							brainScores.put(b2,brainScores.get(b2) + 1);
+						}
 					}
 				}
 			}
@@ -212,14 +213,17 @@ public class Tournament {
 	private boolean determineWhetherContestWorldValid(World world){
 		boolean valid = true;
 		
-		try {
-			testWriter.write((world.getColumns() == 150 && world.getRows() == 150) + "\t");
-			if((world.getColumns() == 150 && world.getRows() == 150)){
-				testWriter.write(checkRockyBoarders(world) + "\t");
-				testWriter.write(checkNoElementsOnEdge(world) + "\t");
-			}
-		} catch (IOException e) {
-		}
+		/**
+		 * For printing test results to an excel file
+		 */
+//		try {
+//			testWriter.write((world.getColumns() == 150 && world.getRows() == 150) + "\t");
+//			if((world.getColumns() == 150 && world.getRows() == 150)){
+//				testWriter.write(checkRockyBoarders(world) + "\t");
+//				testWriter.write(checkNoElementsOnEdge(world) + "\t");
+//			}
+//		} catch (IOException e) {
+//		}
 		valid = (world.getColumns() == 150 
 			&& world.getRows() == 150
 			&& checkRockyBoarders(world))
@@ -294,15 +298,19 @@ public class Tournament {
 					//When a rock has been found, checks to make sure its not a boarder rock.
 					if (i!= 0 && j != 0 && i!= world.getRows()-1 && j != world.getColumns()-1){
 						//if not then  checks whether the elements around the rock are empty
-						for (int y = -1; y < 2; y++){
-							for (int x = -1; x < 2; x++){
-								if (world.getCell(i+x, j+y).getIsEmpty()){
-									emptyCount++;
-								}
+						int rockOffset = (i+1)%2;
+						for (int y = 0-rockOffset; y <= 1-rockOffset; y++){
+							if (world.getCell(i-1, j+y).getIsEmpty() && world.getCell(i+1, j+y).getIsEmpty()){
+								emptyCount+=2;
+							}
+						}
+						for (int y = -1; y <= 1; y++){
+							if (world.getCell(i, j+y).getIsEmpty()){
+								emptyCount++;
 							}
 						}
 						rockCount++;
-						worldValid = emptyCount == 8;
+						worldValid = emptyCount == 6;
 					}		
 				} else if (currentCell.getIsRAntHill()){	
 					rAntHillLocations.add(new Point(j,i));
@@ -313,8 +321,8 @@ public class Tournament {
 					if(!knownFoodCells.contains(currentCell)){
 						int count = 0;
 						//check that elements above and below food blob are empty cells
-						while (count < 7 && worldValid){
-							worldValid = world.getCell(i-1, j+count-1).getIsEmpty() && world.getCell(i+5, j+count-1).getIsEmpty();
+						while (count < 6 && worldValid){
+							worldValid = world.getCell(i-1, j+count-((i-1)%2)).getIsEmpty() && world.getCell(i+5, j+count-((i+5)%2)).getIsEmpty();
 							count++;
 						}
 						//check that actual food particles are present
@@ -347,13 +355,13 @@ public class Tournament {
 		/**
 		 * Write variable values to test file.
 		 */
-		try {
-			testWriter.write(rockCount + "\t");
-			testWriter.write(foodBlobCount + "\t");
-			testWriter.write(checkAnthill(rAntHillLocations,world) + "\t");
-			testWriter.write(checkAnthill(bAntHillLocations,world) + "\t");
-		} catch (IOException e) {
-		}
+//		try {
+//			testWriter.write(rockCount + "\t");
+//			testWriter.write(foodBlobCount + "\t");
+//			testWriter.write(checkAnthill(rAntHillLocations,world) + "\t");
+//			testWriter.write(checkAnthill(bAntHillLocations,world) + "\t");
+//		} catch (IOException e) {
+//		}
 
 		return rockCount == 14 && worldValid && checkAnthill(rAntHillLocations,world) && checkAnthill(bAntHillLocations,world) && foodBlobCount == 11;
 	}
@@ -373,7 +381,7 @@ public class Tournament {
 			int i = 0;
 			
 			int negativeXOffset = 0;
-			boolean valid = true;
+			boolean valid = points.size() == 127;;
 			int xStart = (int) points.get(0).getX();
 			int yStart = (int) points.get(0).getY();
 			int yOffset = 0;

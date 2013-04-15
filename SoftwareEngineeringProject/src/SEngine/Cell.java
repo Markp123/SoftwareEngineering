@@ -19,6 +19,9 @@ public class Cell extends JButton {
 		super();
 		this.setPreferredSize(new Dimension(preferredWidth, preferredWidth));
 		this.setText(toString());
+		BMarker = new boolean[6];
+		RMarker = new boolean[6];
+		ant = null;
 	}        
 
 	public void updateTile()
@@ -31,10 +34,6 @@ public class Cell extends JButton {
 		isBAntHill = false;
 		isEmpty = false;
 		foodAmount = 0;
-		
-		BMarker = new boolean[6];
-		RMarker = new boolean[6];
-		ant = null;
 	}
 
 	public static int getPreferredWidth() 
@@ -118,7 +117,15 @@ public class Cell extends JButton {
 
 	public String toString()
 	{
-		if(isRock)
+		if(isAnt()){
+			if(getAnt().getColour()==Colour.RED){
+				image = "£";
+			}
+			else{
+				image = "$";
+			}
+		}
+		else if(isRock)
 		{
 			image = "#";
 		}
@@ -164,11 +171,26 @@ public class Cell extends JButton {
 		BMarker[bMarker] = false;
 	}
 
+	public boolean[] getBMarker() {
+		return BMarker;
+	}
+
+	public void setBMarker(boolean[] bMarker) {
+		BMarker = bMarker;
+	}
+
+	public boolean[] getRMarker() {
+		return RMarker;
+	}
+
+	public void setRMarker(boolean[] rMarker) {
+		RMarker = rMarker;
+	}
+
 	public void setRMarker(int rMarker) {
 		RMarker[rMarker] = true;
 	}
 	public void removeRMarker(int rMarker) {
 		RMarker[rMarker] = false;
 	}
-	
 }

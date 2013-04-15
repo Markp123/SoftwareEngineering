@@ -86,13 +86,8 @@ public class Sense implements Instruction {
 	 * 
 	 * @return the marker for the mark condition or null if not applicable
 	 */
-	public int getMarker() throws Exception {
-		if (marker != null) {
-			return this.marker;
-		} else {
-			throw new Exception("No associated marker");
-		}
-		
+	public int getMarker(){
+		return this.marker;
 	}
 	
 	public String toString() {
