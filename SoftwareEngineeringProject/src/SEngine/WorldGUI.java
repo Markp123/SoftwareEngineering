@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
-* The GUI display of the mine field
+* The GUI display of the ant world
 *
 * @author (18856)
 */
@@ -12,6 +12,14 @@ public class WorldGUI extends JFrame
 {
     private JPanel board = new JPanel();
     
+    /**
+     * Constructor for the GUI
+     * 
+     * Adds JLabels to a JPanel displaying the state of the world. Sets the background colour of the JLabels to
+     * represent the state of the cell within the world
+     *
+     * @param world - the state of the world
+     */
     public WorldGUI(World world)
     {
         this.getContentPane().setLayout(new BorderLayout());
@@ -50,7 +58,11 @@ public class WorldGUI extends JFrame
         this.setVisible(true);
     }
     
-    
+    /**
+     * Updates the GUI with the new state of the world
+     * 
+     * @param world - the new state of the world
+     */
     public void update(World world){
     	JPanel newBoard = new JPanel();
     	newBoard.setLayout(new GridLayout(world.getRows(), world.getColumns()));
@@ -88,6 +100,11 @@ public class WorldGUI extends JFrame
     	this.setVisible(true);
     }
     
+    /**
+     * Main method
+     * 
+     * @param args
+     */
     public static void main(String[] args)
     {
         World world = new World(150, 150);
