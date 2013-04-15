@@ -32,9 +32,6 @@ public class Game {
 		runGame();
 	}
 	
-	public static void main(String[] args) {
-		new Game(new World(150,150));
-	}
 	
 	public static void main(String[] args) {
 		new Game(new World(150,150),new BrainParser("brain2.txt"),new BrainParser("horseshoe-1.txt"));

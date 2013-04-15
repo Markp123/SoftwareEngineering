@@ -1,11 +1,4 @@
 package SEngine;
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/heads/Ben
-
-
-import javax.swing.JLabel;
 
 /**
  * Software Engineering Project 2013
@@ -112,15 +105,6 @@ public class Cell{
 		this.image = newImage;
 	}
 
-	public String toString() {
-		if(isAnt()){
-			if(getAnt().getColour()==Colour.RED) {
-				image = "£";
-			} else {
-				image = "$";
-			}
-		} else if(isRock) {
-=======
 	public String toString()
 	{
 		if(isAnt()){
@@ -133,7 +117,6 @@ public class Cell{
 		}
 		else if(isRock)
 		{
->>>>>>> refs/heads/Ben
 			image = "#";
 		} else if (isFood) {
 			image = String.valueOf(foodAmount);
@@ -145,17 +128,8 @@ public class Cell{
 			image = ".";
 		}
 		return image;
-<<<<<<< HEAD
 	}
-	
-=======
 
-	}
-	private Ant ant;
-	private boolean[] BMarker;
-	private boolean[] RMarker;
-
->>>>>>> refs/heads/Ben
 	public Ant getAnt() {
 		return ant;
 	}

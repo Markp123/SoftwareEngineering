@@ -12,7 +12,6 @@ public class WorldControl extends MouseAdapter
 	{
 		this.view = view;
 		this.world = world;
-		final Cell[][] cells = view.getTiles();
 
 		for(int i = 0; i < cells.length;i++) 
 		{
