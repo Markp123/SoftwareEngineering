@@ -1,11 +1,14 @@
 
 package SEngine;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.awt.Point;
 import java.lang.Thread;
 
 public class Game {
 	private World world;
+	private List<Point> cellsToUpdateList = new ArrayList<Point>();
 	
 	public Game(World world, BrainParser b1, BrainParser b2){
 //		ArrayList<Instruction> brain1 = new BrainParser("src/cleverbrain3.brain").parseBrain();
@@ -21,10 +24,12 @@ public class Game {
 				Cell c = world.getCell(x,y);
 				if(c.getIsRAntHill()){
 					c.setAnt(new Ant(Colour.RED, antR, brain1));
+					cellsToUpdateList.add(new Point(x,y));
 					antR++;
 				}
 				else if(c.getIsBAntHill()){
 					c.setAnt(new Ant(Colour.BLACK, antB, brain2));
+					cellsToUpdateList.add(new Point(x,y));
 					antB++;
 				}
 			}
@@ -166,6 +171,7 @@ public class Game {
 	private void set_food_at(int[] p, int food){
 		world.getCell(p[0], p[1]).setFood(true);
 		world.getCell(p[0], p[1]).setFoodAmount(food);
+		cellsToUpdateList.add(new Point(p[0], p[1]));
 	}
     /**
      * Method to access cell and set the marker
@@ -204,6 +210,7 @@ public class Game {
      */
 	private void clear_ant_at(int[] p){
 		world.getCell(p[0], p[1]).removeAnt();
+		cellsToUpdateList.add(new Point(p[0], p[1]));
 	}
     /**
      * Method to access cell and insert the ant
@@ -213,6 +220,7 @@ public class Game {
      */
     private void set_ant_at(int[] p, Ant a){
     	world.getCell(p[0], p[1]).setAnt(a);
+    	cellsToUpdateList.add(new Point(p[0], p[1]));
     }
     /**
      * Method to access cell and check if an ant exists in this cell
@@ -604,27 +612,27 @@ public class Game {
      * The method to run and start the game
      */
 	private void runGame(){
-		WorldModel model = new WorldModel(world);
+		WorldGUI view = new WorldGUI(world);
 		
-		for(int rounds=0; rounds<300000; rounds++){
+		for(int rounds=0; rounds<1000; rounds++){
 			for(int i = 0; i<127; i++){//127 ants per team in the game?
-
-			step(i, Colour.RED);
-			step(i, Colour.BLACK);
-			i++;
+				step(i, Colour.RED);
+				step(i, Colour.BLACK);
 			}
-			try{
-				Thread.sleep(0);//sleep for 1000ms
-			}
-			catch(Exception e){
-				//If thread interrupted by another thread
-			}
-			model.printWorld();
 			//refresh/update representation here
-			if(rounds%500==0){
-				model.printWorld();
+			if(rounds%15 == 0){
+				view.update(cellsToUpdateList);
+				cellsToUpdateList.clear();
 			}
 		}
-		model.printWorld();
+		for(int x = 0; x<world.getRows(); x++){
+			for(int y = 0; y<world.getColumns(); y++){
+				Cell c = world.getCell(x,y);
+				if(c.isAnt()){
+					c.removeAnt();
+				}
+			}
+		}
+		view.endGame();
 	}
 }

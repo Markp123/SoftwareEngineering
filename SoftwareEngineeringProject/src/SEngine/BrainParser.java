@@ -26,18 +26,19 @@ public class BrainParser {
 		//specify syntax of instructions as regular expressions
 		String dir = "(Here|Ahead|LeftAhead|RightAhead)";
 		String leftright = "(Left|Right)";
-		String state = "\\d{1,3}"; //ensures state <= 100
-		String i = "[0-5]";		   //ensures marker 0-5
-		String p = "\\d+";			
+		String state = "\\d{1,4}"; //ensures state <= 10000
+		String i = "[0-5]"; //ensures marker 0-5
+		String p = "\\d+";
+		String comments = "( *;.*)?";
 		String cond = "(Friend|Foe|FriendWithFood|FoeWithFood|Food|Rock|Marker " + i + "|FoeMarker|Home|FoeHome)";
-		String senseIns = "Sense " + dir + " " + state + " " + state + " " + cond;
- 		String markIns = "Mark " + i + " " + state;
-		String unmarkIns = "Unmark " + i + " " + state;
-		String pickupIns = "PickUp " + state + " " + state;
-		String dropIns = "Drop " + state;
-		String turnIns = "Turn " + leftright + " " + state;
-		String moveIns = "Move " + state + " " + state;
-		String flipIns = "Flip " + p + " " + state + " " + state;
+		String senseIns = "Sense " + dir + " " + state + " " + state + " " + cond + comments;
+		String markIns = "Mark " + i + " " + state + comments;
+		String unmarkIns = "Unmark " + i + " " + state + comments;
+		String pickupIns = "PickUp " + state + " " + state + comments;
+		String dropIns = "Drop " + state + comments;
+		String turnIns = "Turn " + leftright + " " + state + comments;
+		String moveIns = "Move " + state + " " + state + comments;
+		String flipIns = "Flip " + p + " " + state + " " + state + comments;
 		//add expressions to syntax list
 		syntax.add(senseIns);
 		syntax.add(markIns);

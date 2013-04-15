@@ -1,5 +1,9 @@
 package SEngine;
 
+import java.awt.Color;
+
+import javax.swing.JLabel;
+
 /**
  * Software Engineering Project 2013
  * 
@@ -26,6 +30,42 @@ public class Cell{
 		RMarker = new boolean[6];
 		ant = null;
 	}        
+
+	public Color toColour()
+	{
+		if(isAnt()){
+			if(getAnt().getColour()==Colour.RED) {
+				return(new Color(255,0,0));
+			} else {
+				return(Color.black);
+			}
+		} else if(getIsRock()) {
+			return(new Color(91,91,91));
+		} else if (getFoodAmount() > 0) {
+			if (getFoodAmount() >= 5) {
+				return(new Color(255,255,0));
+			}
+			else if (getFoodAmount() == 4){
+				return(new Color(245,245,0));
+			}
+			else if (getFoodAmount() == 3){
+				return(new Color(235,235,0));
+			}
+			else if (getFoodAmount() == 2){
+				return(new Color(225,225,0));
+			} else {
+				return(new Color(215,215,0));
+			}
+		} else if (getIsRAntHill()) {
+			return(new Color(255,106,106));
+		} else if (getIsBAntHill()) {
+			return(new Color(193,193,193));
+		} else {
+			return(new Color(113,198,113));
+		}
+	}
+
+
 
 	public void updateTile()
 	{
@@ -123,7 +163,7 @@ public class Cell{
 		} else if (isRAntHill) {
 			image = "+";
 		} else if (isBAntHill) {
-			image = "B";
+			image = "-";
 		} else if (isEmpty) {
 			image = ".";
 		}

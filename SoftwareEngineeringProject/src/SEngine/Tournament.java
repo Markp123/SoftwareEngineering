@@ -36,6 +36,8 @@ public class Tournament {
 		//String s = "TestWorlds/test42.world";
 		//System.out.println(determineWhetherContestWorldValid(new World(s)));
 		//this.test();
+		//new Game(new World("world1.world"), new BrainParser("C:/Users/btrs20/cleverbrain1.txt"), new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
+		
 		setupTournament();
 		System.out.println(holdTournament());
 	}
@@ -65,10 +67,12 @@ public class Tournament {
 	 */
 	private void setupTournament(){
 		//populate brains
-		this.uploadBrain(new BrainParser("brain1.txt"));
-		this.uploadBrain(new BrainParser("brain2.txt"));
-		this.uploadBrain(new BrainParser("horseshoe-1.txt"));
-		this.uploadBrain(new BrainParser("snakebrain.txt"));
+//		this.uploadBrain(new BrainParser("C:/Users/btrs20/brain1.txt"));
+//		this.uploadBrain(new BrainParser("C:/Users/btrs20/brain2.txt"));
+//		this.uploadBrain(new BrainParser("C:/Users/btrs20/horseshoe-1.txt"));
+		this.uploadBrain(new BrainParser("C:/Users/btrs20/snakebrain.txt"));
+		this.uploadBrain(new BrainParser("C:/Users/btrs20/cleverbrain1.txt"));
+		this.uploadBrain(new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
 		
 		
 		if(brainsInTournamentAreValid()){
@@ -76,6 +80,7 @@ public class Tournament {
 			int count = 0;
 			while (count < numberOfWorldsInTournament){
 				World theWorld = new World(150,150);
+				theWorld.writeWorld("world" + count + ".world");
 				if (determineWhetherContestWorldValid(theWorld)){
 					worldsInTournament.add(theWorld);
 					count++;
@@ -95,7 +100,7 @@ public class Tournament {
 	 * @return winning brain
 	 */
 	private BrainParser holdTournament(){
-		for (World theWorld : worldsInTournament){
+		for (int h = 0; h < numberOfWorldsInTournament; h++){
 			for (int i = 0; i < brainsInTournament.size(); i++){
 				BrainParser b1 = brainsInTournament.get(i);
 
@@ -103,7 +108,7 @@ public class Tournament {
 					BrainParser b2 = brainsInTournament.get(j);
 					if (b1 != b2){ 
 
-						Game game1 = new Game(theWorld, b1,b2);
+						Game game1 = new Game(new World("world" + h + ".world"), b1,b2);
 						String winner1 = game1.stats();
 						if (winner1.equals("red")){
 							brainScores.put(b1,brainScores.get(b1) + 2);
@@ -117,12 +122,12 @@ public class Tournament {
 						/**
 						 * Swap colours
 						 */
-						Game game2 = new Game(theWorld, b2,b1);
+						Game game2 = new Game(new World("world" + h + ".world"), b2,b1);
 						String winner2 = game2.stats();
 						if (winner2.equals("red")){
-							brainScores.put(b2,brainScores.get(b1) + 2);
+							brainScores.put(b2,brainScores.get(b2) + 2);
 						} else if (winner2.equals("black")){
-							brainScores.put(b1,brainScores.get(b2) + 2);
+							brainScores.put(b1,brainScores.get(b1) + 2);
 						} else {
 							brainScores.put(b1,brainScores.get(b1) + 1);
 							brainScores.put(b2,brainScores.get(b2) + 1);

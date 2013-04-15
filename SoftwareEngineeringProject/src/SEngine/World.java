@@ -130,9 +130,9 @@ public class World {
 	 *
 	 * @return true if successful
 	 */
-	public boolean writeWorld() {
+	public boolean writeWorld(String fileName) {
 		try {
-			worldWriter = new BufferedWriter(new FileWriter("generatedWorld" + generatedWorldNo + ".world"));
+			worldWriter = new BufferedWriter(new FileWriter(fileName));
 			worldWriter.write(Integer.toString(rows));
 			worldWriter.newLine();
 			worldWriter.write(Integer.toString(columns));
@@ -471,7 +471,7 @@ public class World {
 	public static void main(String[] args) {
 		//World wd = new World("C:/Users/David/Desktop/sample0.world");
 		World wd = new World(150,150);
-		wd.writeWorld();
+		wd.writeWorld("asdf");
 	}
 
 	/**
