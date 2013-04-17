@@ -11,10 +11,9 @@ public class WorldControl extends MouseAdapter
 	private WorldGUI view;
 	private World world;
 
-	public WorldControl(final World world, final WorldGUI view)
+	public WorldControl(final WorldGUI view)
 	{
 		this.view = view;
-		this.world = world;
 
 		view.getGame().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
@@ -52,7 +51,10 @@ public class WorldControl extends MouseAdapter
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p1Chooser.getSelectedFile();
 					//Add selected file to tournament
-					view.choice1.setText(selectedFile.getName());
+					String path = selectedFile.getPath();
+					path = path.replace("\\", "/");
+					System.out.print(path);
+					view.getChoice1().setText(selectedFile.getName());
 				}
 			}
 			public void mouseEntered(MouseEvent e){
@@ -72,7 +74,7 @@ public class WorldControl extends MouseAdapter
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p2Chooser.getSelectedFile();
 					//Add selected file to tournament
-					view.choice2.setText(selectedFile.getName());
+					view.getChoice2().setText(selectedFile.getName());
 				}
 			}
 			public void mouseEntered(MouseEvent e){
@@ -86,9 +88,9 @@ public class WorldControl extends MouseAdapter
 			}
 		});
 
-		view.choosen.addMouseListener(new MouseListener(){
+		view.getChoosen().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
-				view.setNumOfPlayers(Integer.parseInt(view.NumOfPlayers.getText()));
+				view.setNumOfPlayers(Integer.parseInt(view.getNumOfPlayers().getText()));
 				view.showTournament();
 			}
 			public void mouseEntered(MouseEvent e){
@@ -129,7 +131,7 @@ public class WorldControl extends MouseAdapter
 
 		view.getStart().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e){
-				System.out.println("Need to implement the actual start");
+				new Tournament(view.getAmountOfPlayers(), view.getBrains());
 			}
 			public void mouseEntered(MouseEvent e){
 			}

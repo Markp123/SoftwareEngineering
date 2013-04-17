@@ -14,31 +14,32 @@ import javax.swing.*;
  */
 public class WorldGUI extends JFrame
 {
-	ImageIcon icon = new ImageIcon("C:/Users/Mark/Desktop/ant_image.png");
-	JFrame main = new JFrame();
-	JLabel imageLabel = new JLabel(icon);
-	JPanel imagePanel = new JPanel();
-	JFrame twoPGame = new JFrame();
-	JPanel twoPGamePanel = new JPanel();
-	JFrame tournamentFrame = new JFrame();
-	JPanel tournamentPanel = new JPanel();
-	JFrame amountOfPlayersFrame = new JFrame();
-	JPanel numOfP = new JPanel();
-	JButton game = new JButton("Single Game");
-	JButton tournament = new JButton("Tournament");
-	JTextField choice1 = new JTextField();
-	JTextField choice2 = new JTextField();
-	JTextField NumOfPlayers = new JTextField();
-	JButton player1 = new JButton("Player 1");
-	JButton player2 = new JButton("Player 2");
-	JButton choosen = new JButton("Confirm");
-	JButton start = new JButton("START");
+	private ImageIcon icon = new ImageIcon("C:/Users/mpp27/ant_image.png");
+	private JFrame gameScreen = new JFrame("Game");
+	private JFrame main = new JFrame();
+	private JLabel imageLabel = new JLabel(icon);
+	private JPanel imagePanel = new JPanel();
+	private JFrame twoPGame = new JFrame();
+	private JPanel twoPGamePanel = new JPanel();
+	private JFrame tournamentFrame = new JFrame();
+	private JPanel tournamentPanel = new JPanel();
+	private JFrame amountOfPlayersFrame = new JFrame();
+	private JPanel numOfP = new JPanel();
+	private JButton game = new JButton("Single Game");
+	private JButton tournament = new JButton("Tournament");
+	private JTextField choice1 = new JTextField();
+	private JTextField choice2 = new JTextField();
+	private JTextField NumOfPlayers = new JTextField();
+	private JButton player1 = new JButton("Player 1");
+	private JButton player2 = new JButton("Player 2");
+	private JButton choosen = new JButton("Confirm");
+	private JButton start = new JButton("START");
 	private List<JButton> buttonArray = new ArrayList<JButton>();
 	private List<JTextField> textFieldArray = new ArrayList<JTextField>();
 	private JPanel board = new JPanel();
 	private CellRep[][] cellArray;
 	private int amountOfPlayers;
-
+	private List<String> brains;
 
 	/**
 	 * Constructor for the GUI
@@ -50,6 +51,7 @@ public class WorldGUI extends JFrame
 	 */
 	public WorldGUI()
 	{
+		brains = new ArrayList<String>();
 		main.getContentPane().setLayout(new BorderLayout());
 		imagePanel.add(imageLabel);
 		main.add(game, BorderLayout.CENTER);
@@ -59,12 +61,36 @@ public class WorldGUI extends JFrame
 		main.pack();
 		main.setVisible(true);
 	}
+
+	public WorldGUI(World world)
+	{
+		cellArray = new CellRep[world.getRows()][world.getColumns()];
+		gameScreen.getContentPane().setLayout(new BorderLayout());
+		board.setLayout(new GridLayout(world.getRows(), world.getColumns()));
+		for (int i = 0; i < world.getRows(); i++)
+		{
+			for (int j = 0; j < world.getColumns(); j++)
+			{
+				CellRep c = new CellRep(world.getCell(i, j));
+				cellArray[i][j] = c;
+				board.add(c);
+			}
+		}
+		gameScreen.getContentPane().add(new JButton("This actually works!"), BorderLayout.SOUTH);
+		System.out.println("hehehe");
+		gameScreen.getContentPane().add(board, BorderLayout.CENTER);
+		gameScreen.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		gameScreen.setSize(new Dimension(800,800));
+		gameScreen.setVisible(true);
+		gameScreen.validate();
+		board.repaint();
+	}
 	
 	public void showGame()
 	{
 		main.dispose();
 		twoPGame.getContentPane().setLayout(new BorderLayout());
-		twoPGamePanel.setLayout(new GridLayout(2,2));
+		twoPGamePanel.setLayout(new GridLayout(2,2));	
 		twoPGamePanel.add(player1);
 		twoPGamePanel.add(choice1);
 		choice1.setEditable(false);
@@ -77,7 +103,7 @@ public class WorldGUI extends JFrame
 		twoPGame.pack();
 		twoPGame.setVisible(true);
 	}
-	
+
 	public void chooseAmountOfPlayers()
 	{
 		main.dispose();
@@ -91,7 +117,7 @@ public class WorldGUI extends JFrame
 		amountOfPlayersFrame.pack();
 		amountOfPlayersFrame.setVisible(true);
 	}
-	
+
 	public void showTournament()
 	{
 		amountOfPlayersFrame.dispose();
@@ -103,11 +129,15 @@ public class WorldGUI extends JFrame
 				public void mouseClicked(MouseEvent e) {
 					JButton button = (JButton)e.getSource();
 					String buttonName = button.getName();
-					JFileChooser brainChooser = new JFileChooser();
+					JFileChooser brainChooser = new JFileChooser("C:/Users/mpp27/");
 					int returnValue = brainChooser.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
 						File selectedFile = brainChooser.getSelectedFile();
 						//Add selected file to tournament
+						String path = selectedFile.getPath();
+						path = path.replace("\\", "/");
+						brains.add(path);
+						System.out.println(path);
 						textFieldArray.get(Integer.parseInt(buttonName)).setText(selectedFile.getName());
 					}
 				}
@@ -121,6 +151,7 @@ public class WorldGUI extends JFrame
 				}
 			});
 		}
+
 		for (int i = 0; i < amountOfPlayers; i++)
 		{
 			textFieldArray.add(new JTextField()); 
@@ -139,7 +170,12 @@ public class WorldGUI extends JFrame
 		tournamentFrame.pack();
 		tournamentFrame.setVisible(true);
 	}
-	
+
+	public List<String> getBrains()
+	{
+		return brains;
+	}
+
 	public List<JTextField> getTextFieldArray() {
 		return textFieldArray;
 	}
@@ -155,7 +191,7 @@ public class WorldGUI extends JFrame
 	public void setNumOfPlayers(int number){
 		this.amountOfPlayers = number;
 	}
-	
+
 	public JButton getStart() {
 		return start;
 	}
@@ -171,7 +207,7 @@ public class WorldGUI extends JFrame
 	public JButton getTournament(){
 		return tournament;
 	}
-	
+
 	public JButton getPlayer1() {
 		return player1;
 	}
@@ -180,46 +216,50 @@ public class WorldGUI extends JFrame
 		return player2;
 	}
 
-	public void setUpGameWorld(World world)
-	{
-		cellArray = new CellRep[world.getRows()][world.getColumns()];
-		this.getContentPane().setLayout(new BorderLayout());
-		board.setLayout(new GridLayout(world.getRows(), world.getColumns()));
-		for (int i = 0; i < world.getRows(); i++)
-		{
-			for (int j = 0; j < world.getColumns(); j++)
-			{
-				CellRep c = new CellRep(world.getCell(i, j));
-				cellArray[i][j] = c;
-				board.add(c);
-			}
-		}
-		this.getContentPane().add(board, BorderLayout.CENTER);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(new Dimension(800,800));
-		this.setVisible(true);
-	}
 
 	/**
 	 * Updates the GUI with the new state of the world
 	 * 
 	 * @param world - the new state of the world
 	 */
-//	public void update(World world){
-//		for (int i = 0; i < world.getRows(); i++)
-//		{
-//			for (int j = 0; j < world.getColumns(); j++)
-//			{
-//				cellArray[i][j].updateCell(cellArray[i][j]);
-//			}
-//		}
-//	}
+	//	public void update(World world){
+	//		for (int i = 0; i < world.getRows(); i++)
+	//		{
+	//			for (int j = 0; j < world.getColumns(); j++)
+	//			{
+	//				cellArray[i][j].updateCell(cellArray[i][j]);
+	//			}
+	//		}
+	//	}
 	public void update(List<Point> cellsToUpdateList){
 		for(Point p : cellsToUpdateList){
 			int i = p.x;
 			int j = p.y;
 			cellArray[i][j].updateCell(cellArray[i][j]);
 		}
+		board.revalidate();
+		gameScreen.repaint();
+		
+	}
+	
+	public void endGame(){
+		gameScreen.dispose();
+	}
+
+	public JTextField getChoice1() {
+		return choice1;
+	}
+	
+	public JTextField getChoice2() {
+		return choice2;
+	}
+
+	public JButton getChoosen() {
+		return choosen;
+	}
+
+	public JTextField getNumOfPlayers() {
+		return NumOfPlayers;
 	}
 
 	/**
@@ -231,7 +271,7 @@ public class WorldGUI extends JFrame
 	{
 		World world = new World(150, 150);
 		WorldGUI view = new WorldGUI();
-		WorldControl control = new WorldControl(world, view);
+		WorldControl control = new WorldControl(view);
 	}
 
 	class CellRep extends JLabel
@@ -244,14 +284,10 @@ public class WorldGUI extends JFrame
 			this.setBackground(cell.toColour());
 			this.setOpaque(true);
 		}
-		
+
 		public void updateCell(CellRep newCell)
 		{
 			newCell.setBackground(this.cell.toColour());
 		}
-	}
-	
-	public void endGame(){
-		this.dispose();
 	}
 }

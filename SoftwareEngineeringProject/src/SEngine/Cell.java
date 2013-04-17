@@ -40,7 +40,7 @@ public class Cell{
 				return(Color.black);
 			}
 		} else if(getIsRock()) {
-			return(new Color(91,91,91));
+			return(Color.CYAN);
 		} else if (getFoodAmount() > 0) {
 			if (getFoodAmount() >= 5) {
 				return(new Color(255,255,0));

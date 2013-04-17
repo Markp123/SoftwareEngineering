@@ -38,9 +38,9 @@ public class Game {
 	}
 	
 	
-	public static void main(String[] args) {
-		new Game(new World(150,150),new BrainParser("brain2.txt"),new BrainParser("horseshoe-1.txt"));
-	}
+//	public static void main(String[] args) {
+//		new Game(new World(150,150),new BrainParser("brain2.txt"),new BrainParser("horseshoe-1.txt"));
+//	}
 	
 	public String stats(){
 		int rAntsFood = 0;
@@ -611,7 +611,8 @@ public class Game {
     /**
      * The method to run and start the game
      */
-	private void runGame(){
+	private void runGame()
+	{
 		WorldGUI view = new WorldGUI(world);
 		
 		for(int rounds=0; rounds<1000; rounds++){

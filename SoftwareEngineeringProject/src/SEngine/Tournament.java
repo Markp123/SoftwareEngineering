@@ -2,6 +2,7 @@ package SEngine;
 
 import java.awt.Point;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,23 +24,21 @@ public class Tournament {
 	private List<World> worldsInTournament = new ArrayList<World>();
 	private int numberOfWorldsInTournament = 5;
 	BufferedWriter testWriter;
-	
-	public static void main(String[] args) {
-		Tournament t = new Tournament();
-	}
-	
-
+	private int numberOfPlayers;
 	/**
 	 * Constructor for the tournament class.
 	 */
-	public Tournament(){
+	public Tournament(int amountOfPlayers, List<String> brains){
 		//String s = "TestWorlds/test42.world";
 		//System.out.println(determineWhetherContestWorldValid(new World(s)));
 		//this.test();
 		//new Game(new World("world1.world"), new BrainParser("C:/Users/btrs20/cleverbrain1.txt"), new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
-		
-		setupTournament();
-		System.out.println(holdTournament());
+		setupTournament(amountOfPlayers, brains);
+		System.out.println(holdTournament());		
+	}
+	
+	public static void main(String[] args) {
+		Tournament t = new Tournament(2, null);
 	}
 	
 	/**
@@ -62,19 +61,19 @@ public class Tournament {
 	}
 	
 
+
 	/**
 	 * Populate lists containing the brains in tournament and worlds in tournament. 
 	 */
-	private void setupTournament(){
-		//populate brains
-//		this.uploadBrain(new BrainParser("C:/Users/btrs20/brain1.txt"));
-//		this.uploadBrain(new BrainParser("C:/Users/btrs20/brain2.txt"));
-//		this.uploadBrain(new BrainParser("C:/Users/btrs20/horseshoe-1.txt"));
-		this.uploadBrain(new BrainParser("C:/Users/btrs20/snakebrain.txt"));
-		this.uploadBrain(new BrainParser("C:/Users/btrs20/cleverbrain1.txt"));
-		this.uploadBrain(new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
-		
-		
+	public void setupTournament(int numPlayers, List<String> brains){
+		this.numberOfPlayers = numPlayers;
+		for (int i = 0; i < numberOfPlayers; i++)
+		{
+			this.uploadBrain(new BrainParser(brains.get(i)));
+		}
+//		this.uploadBrain(new BrainParser("C:/Users/mpp27/cleverbrain1.brain"));
+//		this.uploadBrain(new BrainParser("C:/Users/mpp27/cleverbrain2.brain"));
+//		this.uploadBrain(new BrainParser("C:/Users/mpp27/snakebrain.brain"));		
 		if(brainsInTournamentAreValid()){
 			//populate worlds
 			int count = 0;
