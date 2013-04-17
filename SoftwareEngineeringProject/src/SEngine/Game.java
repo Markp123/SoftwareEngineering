@@ -10,7 +10,7 @@ public class Game {
 	private World world;
 	private List<Point> cellsToUpdateList = new ArrayList<Point>();
 	
-	public Game(World world, BrainParser b1, BrainParser b2){
+	public Game(World world, BrainParser b1, BrainParser b2, WorldGUI view){
 //		ArrayList<Instruction> brain1 = new BrainParser("src/cleverbrain3.brain").parseBrain();
 //		ArrayList<Instruction> brain2 = new BrainParser("src/cleverbrain4.brain").parseBrain();
 		
@@ -34,7 +34,7 @@ public class Game {
 				}
 			}
 		}
-		runGame();
+		runGame(view);
 	}
 	
 	
@@ -611,9 +611,9 @@ public class Game {
     /**
      * The method to run and start the game
      */
-	private void runGame()
+	private void runGame(WorldGUI view)
 	{
-		WorldGUI view = new WorldGUI(world);
+		view.setupWorld(world);
 		
 		for(int rounds=0; rounds<1000; rounds++){
 			for(int i = 0; i<127; i++){//127 ants per team in the game?

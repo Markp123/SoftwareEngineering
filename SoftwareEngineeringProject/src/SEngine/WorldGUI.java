@@ -12,18 +12,18 @@ import javax.swing.*;
  *
  * @author (18856)
  */
-public class WorldGUI extends JFrame
+public class WorldGUI
 {
-	private ImageIcon icon = new ImageIcon("C:/Users/mpp27/ant_image.png");
+	private ImageIcon icon = new ImageIcon("C:/Users/Mark/Desktop/ant_image.png");
 	private JFrame gameScreen = new JFrame("Game");
-	private JFrame main = new JFrame();
+	private JFrame main = new JFrame("Main Menu");
 	private JLabel imageLabel = new JLabel(icon);
 	private JPanel imagePanel = new JPanel();
-	private JFrame twoPGame = new JFrame();
+	private JFrame twoPGame = new JFrame("Two Player Game");
 	private JPanel twoPGamePanel = new JPanel();
-	private JFrame tournamentFrame = new JFrame();
+	private JFrame tournamentFrame = new JFrame("Tournament");
 	private JPanel tournamentPanel = new JPanel();
-	private JFrame amountOfPlayersFrame = new JFrame();
+	private JFrame amountOfPlayersFrame = new JFrame("Amount Of Players");
 	private JPanel numOfP = new JPanel();
 	private JButton game = new JButton("Single Game");
 	private JButton tournament = new JButton("Tournament");
@@ -40,6 +40,7 @@ public class WorldGUI extends JFrame
 	private CellRep[][] cellArray;
 	private int amountOfPlayers;
 	private List<String> brains;
+	private int count = 1;
 
 	/**
 	 * Constructor for the GUI
@@ -57,35 +58,33 @@ public class WorldGUI extends JFrame
 		main.add(game, BorderLayout.CENTER);
 		main.add(tournament, BorderLayout.SOUTH);
 		main.add(imagePanel, BorderLayout.NORTH);
-		main.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		main.pack();
 		main.setVisible(true);
 	}
 
-	public WorldGUI(World world)
+	public void setupWorld(World world)
 	{
 		cellArray = new CellRep[world.getRows()][world.getColumns()];
 		gameScreen.getContentPane().setLayout(new BorderLayout());
 		board.setLayout(new GridLayout(world.getRows(), world.getColumns()));
-		for (int i = 0; i < world.getRows(); i++)
-		{
-			for (int j = 0; j < world.getColumns(); j++)
-			{
+		
+		for (int i = 0; i < world.getRows(); i++){
+			for (int j = 0; j < world.getColumns(); j++){
 				CellRep c = new CellRep(world.getCell(i, j));
 				cellArray[i][j] = c;
 				board.add(c);
 			}
 		}
-		gameScreen.getContentPane().add(new JButton("This actually works!"), BorderLayout.SOUTH);
-		System.out.println("hehehe");
+		System.out.println("Game " + count);
+		count++;
 		gameScreen.getContentPane().add(board, BorderLayout.CENTER);
-		gameScreen.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		gameScreen.setSize(new Dimension(800,800));
+		gameScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameScreen.setPreferredSize(new Dimension(800,800));
+		gameScreen.pack();
 		gameScreen.setVisible(true);
-		gameScreen.validate();
-		board.repaint();
 	}
-	
+		
 	public void showGame()
 	{
 		main.dispose();
@@ -99,7 +98,7 @@ public class WorldGUI extends JFrame
 		choice2.setEditable(false);
 		twoPGame.add(twoPGamePanel, BorderLayout.CENTER);
 		twoPGame.add(start, BorderLayout.SOUTH);
-		twoPGame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		twoPGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		twoPGame.pack();
 		twoPGame.setVisible(true);
 	}
@@ -109,11 +108,11 @@ public class WorldGUI extends JFrame
 		main.dispose();
 		numOfP.setLayout(new GridLayout(1,2));
 		amountOfPlayersFrame.getContentPane().setLayout(new BorderLayout());
-		numOfP.add(new JLabel("Input number of players:"));
+		numOfP.add(new JLabel("Input number of players: "));
 		numOfP.add(NumOfPlayers);
 		amountOfPlayersFrame.add(numOfP, BorderLayout.CENTER);
 		amountOfPlayersFrame.add(choosen, BorderLayout.SOUTH);
-		amountOfPlayersFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		amountOfPlayersFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		amountOfPlayersFrame.pack();
 		amountOfPlayersFrame.setVisible(true);
 	}
@@ -129,7 +128,7 @@ public class WorldGUI extends JFrame
 				public void mouseClicked(MouseEvent e) {
 					JButton button = (JButton)e.getSource();
 					String buttonName = button.getName();
-					JFileChooser brainChooser = new JFileChooser("C:/Users/mpp27/");
+					JFileChooser brainChooser = new JFileChooser("C:/Users/Mark/Desktop/");
 					int returnValue = brainChooser.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
 						File selectedFile = brainChooser.getSelectedFile();
@@ -166,9 +165,14 @@ public class WorldGUI extends JFrame
 		}
 		tournamentFrame.add(tournamentPanel, BorderLayout.CENTER);
 		tournamentFrame.add(start, BorderLayout.SOUTH);
-		tournamentFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		tournamentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tournamentFrame.pack();
 		tournamentFrame.setVisible(true);
+	}
+	
+	public void addBrain(String brain, int index)
+	{
+		brains.add(index, brain);
 	}
 
 	public List<String> getBrains()
@@ -236,10 +240,7 @@ public class WorldGUI extends JFrame
 			int i = p.x;
 			int j = p.y;
 			cellArray[i][j].updateCell(cellArray[i][j]);
-		}
-		board.revalidate();
-		gameScreen.repaint();
-		
+		}		
 	}
 	
 	public void endGame(){
@@ -269,7 +270,6 @@ public class WorldGUI extends JFrame
 	 */
 	public static void main(String[] args)
 	{
-		World world = new World(150, 150);
 		WorldGUI view = new WorldGUI();
 		WorldControl control = new WorldControl(view);
 	}

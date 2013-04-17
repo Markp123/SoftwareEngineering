@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 
 /**
  * During the tournament, each pair of submissions is pitted against each other twice on each of the contest worlds
@@ -24,22 +26,24 @@ public class Tournament {
 	private List<World> worldsInTournament = new ArrayList<World>();
 	private int numberOfWorldsInTournament = 5;
 	BufferedWriter testWriter;
-	private int numberOfPlayers;
+	
 	/**
 	 * Constructor for the tournament class.
 	 */
-	public Tournament(int amountOfPlayers, List<String> brains){
+	public Tournament(int amountOfPlayers, List<String> brains, WorldGUI view){
 		//String s = "TestWorlds/test42.world";
 		//System.out.println(determineWhetherContestWorldValid(new World(s)));
 		//this.test();
 		//new Game(new World("world1.world"), new BrainParser("C:/Users/btrs20/cleverbrain1.txt"), new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
 		setupTournament(amountOfPlayers, brains);
-		System.out.println(holdTournament());		
+		BrainParser winner = holdTournament(view);
+		JOptionPane winnerPane = new JOptionPane("" + winner);		
+		winnerPane.setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		Tournament t = new Tournament(2, null);
-	}
+//	public static void main(String[] args) {
+//		Tournament t = new Tournament(2, null, new WorldGUI(null, true));
+//	}
 	
 	/**
 	 * Test syntax checker on purpose built worlds and write results to an excel file.
@@ -66,14 +70,13 @@ public class Tournament {
 	 * Populate lists containing the brains in tournament and worlds in tournament. 
 	 */
 	public void setupTournament(int numPlayers, List<String> brains){
-		this.numberOfPlayers = numPlayers;
-		for (int i = 0; i < numberOfPlayers; i++)
+		for (int i = 0; i < numPlayers; i++)
 		{
 			this.uploadBrain(new BrainParser(brains.get(i)));
 		}
-//		this.uploadBrain(new BrainParser("C:/Users/mpp27/cleverbrain1.brain"));
-//		this.uploadBrain(new BrainParser("C:/Users/mpp27/cleverbrain2.brain"));
-//		this.uploadBrain(new BrainParser("C:/Users/mpp27/snakebrain.brain"));		
+//		this.uploadBrain(new BrainParser("C:/Users/Mark/Desktop/cleverbrain1.brain"));
+//		this.uploadBrain(new BrainParser("C:/Users/Mark/Desktop/cleverbrain2.brain"));
+//		this.uploadBrain(new BrainParser("C:/Users/Mark/Desktop/snakebrain.brain"));		
 		if(brainsInTournamentAreValid()){
 			//populate worlds
 			int count = 0;
@@ -98,7 +101,7 @@ public class Tournament {
 	 * 
 	 * @return winning brain
 	 */
-	private BrainParser holdTournament(){
+	private BrainParser holdTournament(WorldGUI view){
 		for (int h = 0; h < numberOfWorldsInTournament; h++){
 			for (int i = 0; i < brainsInTournament.size(); i++){
 				BrainParser b1 = brainsInTournament.get(i);
@@ -107,7 +110,7 @@ public class Tournament {
 					BrainParser b2 = brainsInTournament.get(j);
 					if (b1 != b2){ 
 
-						Game game1 = new Game(new World("world" + h + ".world"), b1,b2);
+						Game game1 = new Game(new World("world" + h + ".world"), b1,b2, view);
 						String winner1 = game1.stats();
 						if (winner1.equals("red")){
 							brainScores.put(b1,brainScores.get(b1) + 2);
@@ -121,7 +124,7 @@ public class Tournament {
 						/**
 						 * Swap colours
 						 */
-						Game game2 = new Game(new World("world" + h + ".world"), b2,b1);
+						Game game2 = new Game(new World("world" + h + ".world"), b2,b1, view);
 						String winner2 = game2.stats();
 						if (winner2.equals("red")){
 							brainScores.put(b2,brainScores.get(b2) + 2);
