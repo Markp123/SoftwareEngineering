@@ -47,14 +47,14 @@ public class WorldControl extends MouseAdapter
 
 		view.getPlayer1().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
-				JFileChooser p1Chooser = new JFileChooser("C:/Users/mpp27/");
+				JFileChooser p1Chooser = new JFileChooser("");
 				int returnValue = p1Chooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p1Chooser.getSelectedFile();
 					//Add selected file to tournament
 					String path = selectedFile.getPath();
 					path = path.replace("\\", "/");
-					view.addBrain(path,0);
+					view.addBrain(path);
 					System.out.println(path);
 					view.getChoice1().setText(selectedFile.getName());
 				}
@@ -71,14 +71,14 @@ public class WorldControl extends MouseAdapter
 
 		view.getPlayer2().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
-				JFileChooser p2Chooser = new JFileChooser("C:/Users/mpp27/");
+				JFileChooser p2Chooser = new JFileChooser("");
 				int returnValue = p2Chooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p2Chooser.getSelectedFile();
 					//Add selected file to tournament
 					String path = selectedFile.getPath();
 					path = path.replace("\\", "/");
-					view.addBrain(path, 1);
+					view.addBrain(path);
 					System.out.println(path);
 					view.getChoice2().setText(selectedFile.getName());
 				}
@@ -137,7 +137,7 @@ public class WorldControl extends MouseAdapter
 
 		view.getStart().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e){
-				new Tournament(view.getAmountOfPlayers(), view.getBrains(), view);
+				System.out.println("Needs to be implemented!");
 			}
 			public void mouseEntered(MouseEvent e){
 			}
