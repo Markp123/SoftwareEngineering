@@ -14,7 +14,7 @@ import javax.swing.*;
  */
 public class WorldGUI
 {
-	private ImageIcon icon = new ImageIcon("C:/Users/Mark/Desktop/ant_image.png");
+	private ImageIcon icon = new ImageIcon("C:/Users/mpp27/ant_image.png");
 	private JFrame gameScreen = new JFrame("Game");
 	private JFrame main = new JFrame("Main Menu");
 	private JLabel imageLabel = new JLabel(icon);
@@ -128,7 +128,7 @@ public class WorldGUI
 				public void mouseClicked(MouseEvent e) {
 					JButton button = (JButton)e.getSource();
 					String buttonName = button.getName();
-					JFileChooser brainChooser = new JFileChooser("C:/Users/Mark/Desktop/");
+					JFileChooser brainChooser = new JFileChooser("C:/Users/mpp27/");
 					int returnValue = brainChooser.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
 						File selectedFile = brainChooser.getSelectedFile();
@@ -138,7 +138,7 @@ public class WorldGUI
 						brains.add(path);
 						System.out.println(path);
 						textFieldArray.get(Integer.parseInt(buttonName)).setText(selectedFile.getName());
-					}
+			 		}
 				}
 				public void mouseEntered(MouseEvent e){
 				}
@@ -168,6 +168,11 @@ public class WorldGUI
 		tournamentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tournamentFrame.pack();
 		tournamentFrame.setVisible(true);
+	}
+	
+	public JFrame getGameScreen()
+	{
+		return gameScreen;
 	}
 	
 	public void addBrain(String brain, int index)

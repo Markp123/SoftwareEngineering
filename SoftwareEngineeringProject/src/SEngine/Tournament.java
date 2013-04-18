@@ -24,7 +24,7 @@ public class Tournament {
 	private List<BrainParser> brainsInTournament = new ArrayList<BrainParser>();
 	private HashMap<BrainParser,Integer> brainScores = new HashMap<BrainParser,Integer>();
 	private List<World> worldsInTournament = new ArrayList<World>();
-	private int numberOfWorldsInTournament = 5;
+	private int numberOfWorldsInTournament = 1;
 	BufferedWriter testWriter;
 	
 	/**
@@ -36,9 +36,11 @@ public class Tournament {
 		//this.test();
 		//new Game(new World("world1.world"), new BrainParser("C:/Users/btrs20/cleverbrain1.txt"), new BrainParser("C:/Users/btrs20/cleverbrain2.txt"));
 		setupTournament(amountOfPlayers, brains);
-		BrainParser winner = holdTournament(view);
-		JOptionPane winnerPane = new JOptionPane("" + winner);		
-		winnerPane.setVisible(true);
+		BrainParser winner = holdTournament(view);		
+		JOptionPane.showMessageDialog(view.getGameScreen(),
+			    winner.getName(),
+			    "Winner",
+			    JOptionPane.PLAIN_MESSAGE);
 	}
 	
 //	public static void main(String[] args) {

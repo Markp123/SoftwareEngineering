@@ -615,7 +615,7 @@ public class Game {
 	{
 		view.setupWorld(world);
 		
-		for(int rounds=0; rounds<1000; rounds++){
+		for(int rounds=0; rounds<2000; rounds++){
 			for(int i = 0; i<127; i++){//127 ants per team in the game?
 				step(i, Colour.RED);
 				step(i, Colour.BLACK);

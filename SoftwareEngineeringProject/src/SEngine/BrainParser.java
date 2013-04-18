@@ -13,6 +13,7 @@ public class BrainParser {
 	
 	private ArrayList<String> brainInstructions;
 	private ArrayList<String> syntax;
+	private String name;
 	
 	/**
 	 * Constructor for BrainParser
@@ -20,6 +21,7 @@ public class BrainParser {
 	 * @param filename the filename of the ant brain to be read
 	 */
 	public BrainParser(String filename) {
+		name = filename;
 		BrainReader reader = new BrainReader(filename);
 		brainInstructions = reader.read();
 		syntax = new ArrayList<String>();
@@ -185,5 +187,9 @@ public class BrainParser {
 			//notify of error
 			return null;
 		}
+	}
+	
+	public String getName(){
+		return name;
 	}
 }

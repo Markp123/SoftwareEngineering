@@ -47,7 +47,7 @@ public class WorldControl extends MouseAdapter
 
 		view.getPlayer1().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
-				JFileChooser p1Chooser = new JFileChooser("C:/Users/Mark/Desktop/");
+				JFileChooser p1Chooser = new JFileChooser("C:/Users/mpp27/");
 				int returnValue = p1Chooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p1Chooser.getSelectedFile();
@@ -71,7 +71,7 @@ public class WorldControl extends MouseAdapter
 
 		view.getPlayer2().addMouseListener(new MouseListener(){
 			public void mouseClicked(MouseEvent e) {
-				JFileChooser p2Chooser = new JFileChooser("C:/Users/Mark/Desktop/");
+				JFileChooser p2Chooser = new JFileChooser("C:/Users/mpp27/");
 				int returnValue = p2Chooser.showOpenDialog(null);
 				if (returnValue == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = p2Chooser.getSelectedFile();
