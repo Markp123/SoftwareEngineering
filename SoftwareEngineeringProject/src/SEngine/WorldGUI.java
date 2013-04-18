@@ -8,13 +8,13 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- * The GUI display of the ant world
+ * The GUI controls the game and displays the game world
  *
  * @author (18856)
  */
-public class WorldGUI
+public class WorldGUI extends JFrame
 {
-	private ImageIcon icon = new ImageIcon("C:/Users/mpp27/ant_image.png");
+	private ImageIcon icon = new ImageIcon("ant_image.png");
 	private JFrame gameScreen = new JFrame("Game");
 	private JFrame main = new JFrame("Main Menu");
 	private JLabel imageLabel = new JLabel(icon);
@@ -40,15 +40,12 @@ public class WorldGUI
 	private CellRep[][] cellArray;
 	private int amountOfPlayers;
 	private List<String> brains;
-	private int count = 1;
-
+	
 	/**
 	 * Constructor for the GUI
 	 * 
-	 * Adds JLabels to a JPanel displaying the state of the world. Sets the background colour of the JLabels to
-	 * represent the state of the cell within the world
+	 * This creates the main menu that greets the player
 	 *
-	 * @param world - the state of the world
 	 */
 	public WorldGUI()
 	{
@@ -58,35 +55,58 @@ public class WorldGUI
 		main.add(game, BorderLayout.CENTER);
 		main.add(tournament, BorderLayout.SOUTH);
 		main.add(imagePanel, BorderLayout.NORTH);
-		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		main.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		main.pack();
 		main.setVisible(true);
 	}
-
-	public void setupWorld(World world)
-	{
+	
+	public WorldGUI(World world) {
+		this.getContentPane().setLayout(new BorderLayout());
 		cellArray = new CellRep[world.getRows()][world.getColumns()];
-		gameScreen.getContentPane().setLayout(new BorderLayout());
 		board.setLayout(new GridLayout(world.getRows(), world.getColumns()));
-		
 		for (int i = 0; i < world.getRows(); i++){
 			for (int j = 0; j < world.getColumns(); j++){
 				CellRep c = new CellRep(world.getCell(i, j));
-				cellArray[i][j] = c;
 				board.add(c);
+				cellArray[i][j] = c;
 			}
 		}
-		System.out.println("Game " + count);
-		count++;
-		gameScreen.getContentPane().add(board, BorderLayout.CENTER);
-		gameScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameScreen.setPreferredSize(new Dimension(800,800));
-		gameScreen.pack();
-		gameScreen.setVisible(true);
+		board.setVisible(true);
+		this.add(board, BorderLayout.CENTER);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setPreferredSize(new Dimension(800,800));
+		this.pack();
+		this.setVisible(true);
 	}
-		
-	public void showGame()
-	{
+
+	/**
+	 * This sets up the original state of the world using the input world parameter
+	 * 
+	 * @param world - The original state of the world
+	 */
+	public void setupWorld(World world) {
+		this.getContentPane().setLayout(new BorderLayout());
+		cellArray = new CellRep[world.getRows()][world.getColumns()];
+		board.setLayout(new GridLayout(world.getRows(), world.getColumns()));
+		for (int i = 0; i < world.getRows(); i++){
+			for (int j = 0; j < world.getColumns(); j++){
+				CellRep c = new CellRep(world.getCell(i, j));
+				board.add(c);
+				cellArray[i][j] = c;
+			}
+		}
+		board.setVisible(true);
+		this.add(board, BorderLayout.CENTER);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setPreferredSize(new Dimension(800,800));
+		this.pack();
+		this.setVisible(true);
+	}
+
+	/**
+	 * This shows the two player brain selection screen
+	 */
+	public void showGame(){
 		main.dispose();
 		twoPGame.getContentPane().setLayout(new BorderLayout());
 		twoPGamePanel.setLayout(new GridLayout(2,2));	
@@ -98,13 +118,15 @@ public class WorldGUI
 		choice2.setEditable(false);
 		twoPGame.add(twoPGamePanel, BorderLayout.CENTER);
 		twoPGame.add(start, BorderLayout.SOUTH);
-		twoPGame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		twoPGame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		twoPGame.pack();
 		twoPGame.setVisible(true);
 	}
 
-	public void chooseAmountOfPlayers()
-	{
+	/**
+	 * This shows the screen where the player selects the amount of players
+	 */
+	public void chooseAmountOfPlayers(){
 		main.dispose();
 		numOfP.setLayout(new GridLayout(1,2));
 		amountOfPlayersFrame.getContentPane().setLayout(new BorderLayout());
@@ -112,11 +134,14 @@ public class WorldGUI
 		numOfP.add(NumOfPlayers);
 		amountOfPlayersFrame.add(numOfP, BorderLayout.CENTER);
 		amountOfPlayersFrame.add(choosen, BorderLayout.SOUTH);
-		amountOfPlayersFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		amountOfPlayersFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		amountOfPlayersFrame.pack();
 		amountOfPlayersFrame.setVisible(true);
 	}
 
+	/**
+	 * This shows the brain selection screen for the tournament
+	 */
 	public void showTournament()
 	{
 		amountOfPlayersFrame.dispose();
@@ -128,7 +153,7 @@ public class WorldGUI
 				public void mouseClicked(MouseEvent e) {
 					JButton button = (JButton)e.getSource();
 					String buttonName = button.getName();
-					JFileChooser brainChooser = new JFileChooser("C:/Users/mpp27/");
+					JFileChooser brainChooser = new JFileChooser("");
 					int returnValue = brainChooser.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
 						File selectedFile = brainChooser.getSelectedFile();
@@ -165,62 +190,116 @@ public class WorldGUI
 		}
 		tournamentFrame.add(tournamentPanel, BorderLayout.CENTER);
 		tournamentFrame.add(start, BorderLayout.SOUTH);
-		tournamentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		tournamentFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		tournamentFrame.pack();
 		tournamentFrame.setVisible(true);
 	}
 	
+	/**
+	 * returns the two player game screen
+	 * 
+	 * @return gameScreen
+	 */
 	public JFrame getGameScreen()
 	{
 		return gameScreen;
 	}
 	
-	public void addBrain(String brain, int index)
+	/**
+	 * adds a path to a brain
+	 * 
+	 * @param brain
+	 */
+	public void addBrain(String brain)
 	{
-		brains.add(index, brain);
+		brains.add(brain);
 	}
 
+	/**
+	 * Returns the brains to be used in the game
+	 * @return brains
+	 */
 	public List<String> getBrains()
 	{
 		return brains;
 	}
 
+	/**
+	 * Returns the textfields used in the tournament brain selection screen
+	 */
 	public List<JTextField> getTextFieldArray() {
 		return textFieldArray;
 	}
 
+	/**
+	 * Returns the amount of players
+	 * @return amountOfPlayers
+	 */
 	public int getAmountOfPlayers() {
 		return amountOfPlayers;
 	}
 
+	/**
+	 * Returns the buttons used in the tournament brain selection screen
+	 * 
+	 * @return buttonArray
+	 */
 	public List<JButton> getButtonArray() {
 		return buttonArray;
 	}
 
+	/**
+	 * Sets the amount of players in the tournament
+	 * @param number
+	 */
 	public void setNumOfPlayers(int number){
 		this.amountOfPlayers = number;
 	}
 
+	/**
+	 * Returns the start button
+	 * @return start
+	 */
 	public JButton getStart() {
 		return start;
 	}
 
-	public JFrame getTwoPGame()
-	{
+	/**
+	 * Returns the two player game screen
+	 * @return twoPGame
+	 */
+	public JFrame getTwoPGame(){
 		return twoPGame;
 	}
 
+	/**
+	 * returns the single game button
+	 * @return game
+	 */
 	public JButton getGame(){
 		return game;
 	}
+	
+	/**
+	 * Returns the tournament button
+	 * @return tournament
+	 */
 	public JButton getTournament(){
 		return tournament;
 	}
 
+	/**
+	 * Returns the player 1 button in the two player game screen
+	 * @return player1
+	 */
 	public JButton getPlayer1() {
 		return player1;
 	}
 
+	/**
+	 * Returns the player 2 button in the two player game screen
+	 * @return player2
+	 */
 	public JButton getPlayer2() {
 		return player2;
 	}
@@ -231,15 +310,15 @@ public class WorldGUI
 	 * 
 	 * @param world - the new state of the world
 	 */
-	//	public void update(World world){
-	//		for (int i = 0; i < world.getRows(); i++)
-	//		{
-	//			for (int j = 0; j < world.getColumns(); j++)
-	//			{
-	//				cellArray[i][j].updateCell(cellArray[i][j]);
-	//			}
-	//		}
-	//	}
+//		public void update(World world){
+//			for (int i = 0; i < world.getRows(); i++)
+//			{
+//				for (int j = 0; j < world.getColumns(); j++)
+//				{
+//					cellArray[i][j].updateCell(cellArray[i][j]);
+//				}
+//			}
+//		}
 	public void update(List<Point> cellsToUpdateList){
 		for(Point p : cellsToUpdateList){
 			int i = p.x;
@@ -248,22 +327,41 @@ public class WorldGUI
 		}		
 	}
 	
+	/**
+	 * Removes the world display
+	 */
 	public void endGame(){
 		gameScreen.dispose();
 	}
 
+	/**
+	 * Returns the textfield displaying player 1's choice
+	 * @return choice1
+	 */
 	public JTextField getChoice1() {
 		return choice1;
 	}
 	
+	/**
+	 * Returns the textfield displaying player 2's choice
+	 * @return choice2
+	 */
 	public JTextField getChoice2() {
 		return choice2;
 	}
 
+	/**
+	 * Returns the button from the amount of players selection screen
+	 * @return choosen
+	 */
 	public JButton getChoosen() {
 		return choosen;
 	}
 
+	/**
+	 * Returns the textfield holding the number of players
+	 * @return NumOfPlayers
+	 */
 	public JTextField getNumOfPlayers() {
 		return NumOfPlayers;
 	}
@@ -277,7 +375,7 @@ public class WorldGUI
 	{
 		WorldGUI view = new WorldGUI();
 		WorldControl control = new WorldControl(view);
-	}
+	}	
 
 	class CellRep extends JLabel
 	{
